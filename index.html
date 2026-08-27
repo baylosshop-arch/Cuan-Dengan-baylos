@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cuan dengan Baylos - Platform Afiliasi</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@200;400;600;800;900&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script>
+tailwind.config={theme:{extend:{fontFamily:{display:['Outfit','sans-serif'],body:['Space Grotesk','sans-serif']}}}}
+</script>
+<style>
+:root{--bg:#0b0b14;--bg2:#111120;--card:#16162a;--card2:#1c1c35;--border:#2a2a4a;--gold:#f59e0b;--gold2:#fbbf24;--gold3:#d97706;--green:#10b981;--red:#ef4444;--text:#f1f1f1;--muted:#8888aa;--accent:var(--gold)}
+*{margin:0;padding:0;box-sizing:border-box;scrollbar-width:thin;scrollbar-color:var(--gold3) var(--bg2)}
+::-webkit-scrollbar{width:6px}::-webkit-scrollbar-track{background:var(--bg2)}::-webkit-scrollbar-thumb{background:var(--gold3);border-radius:3px}
+body{font-family:'Space Grotesk',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
+@keyframes fadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+@keyframes slideRight{from{opacity:0;transform:translateX(-20px)}to{opacity:1;transform:translateX(0)}}
+@keyframes shimmer{0%{background-position:-200% center}100%{background-position:200% center}}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+@keyframes pulse-gold{0%,100%{box-shadow:0 0 0 0 rgba(245,158,11,.4)}50%{box-shadow:0 0 20px 6px rgba(245,158,11,.15)}}
+@keyframes spin-slow{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+@keyframes countUp{from{opacity:0;transform:scale(.8)}to{opacity:1;transform:scale(1)}}
+.anim-in{animation:fadeIn .5s ease both}
+.anim-in-d1{animation:fadeIn .5s ease .1s both}
+.anim-in-d2{animation:fadeIn .5s ease .2s both}
+.anim-in-d3{animation:fadeIn .5s ease .3s both}
+.anim-in-d4{animation:fadeIn .5s ease .4s both}
+.anim-slide{animation:slideRight .4s ease both}
+.shimmer-text{background:linear-gradient(90deg,var(--gold3),var(--gold2),#fff,var(--gold2),var(--gold3));background-size:200% auto;-webkit-background-clip:text;-webkit-text-fill-color:transparent;animation:shimmer 4s linear infinite}
+.gold-border{border:1px solid rgba(245,158,11,.25)}
+.gold-glow{box-shadow:0 0 30px rgba(245,158,11,.08)}
+.btn-gold{background:linear-gradient(135deg,var(--gold3),var(--gold));color:#000;font-weight:600;border:none;cursor:pointer;transition:all .25s}
+.btn-gold:hover{transform:translateY(-1px);box-shadow:0 6px 24px rgba(245,158,11,.3)}
+.btn-outline{border:1px solid var(--gold);color:var(--gold);background:transparent;cursor:pointer;transition:all .25s}
+.btn-outline:hover{background:rgba(245,158,11,.1)}
+.card-hover{transition:all .3s ease}
+.card-hover:hover{transform:translateY(-4px);box-shadow:0 12px 40px rgba(0,0,0,.4);border-color:rgba(245,158,11,.35)}
+.input-field{background:var(--bg);border:1px solid var(--border);color:var(--text);padding:10px 14px;border-radius:8px;width:100%;font-family:inherit;font-size:14px;transition:border-color .2s}
+.input-field:focus{outline:none;border-color:var(--gold)}
+.input-field::placeholder{color:var(--muted)}
+.logo-coin{width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,var(--gold3),var(--gold2));display:flex;align-items:center;justify-content:center;font-family:'Outfit';font-weight:900;font-size:20px;color:#000;flex-shrink:0}
+.toast{animation:fadeIn .3s ease both;backdrop-filter:blur(12px)}
+.toast-out{animation:fadeIn .3s ease reverse both}
+.stat-card{animation:countUp .5s ease both}
+.sidebar-link{display:flex;align-items:center;gap:10px;padding:10px 16px;border-radius:8px;cursor:pointer;transition:all .2s;color:var(--muted);font-size:14px}
+.sidebar-link:hover,.sidebar-link.active{background:rgba(245,158,11,.1);color:var(--gold)}
+.bg-mesh{background-image:radial-gradient(ellipse at 20% 0%,rgba(245,158,11,.06) 0%,transparent 60%),radial-gradient(ellipse at 80% 100%,rgba(16,185,129,.04) 0%,transparent 60%)}
+table{width:100%;border-collapse:collapse}
+th{text-align:left;padding:10px 12px;font-size:12px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);border-bottom:1px solid var(--border)}
+td{padding:10px 12px;font-size:13px;border-bottom:1px solid rgba(42,42,74,.4)}
+tr:hover td{background:rgba(245,158,11,.03)}
+.badge{display:inline-block;padding:2px 10px;border-radius:99px;font-size:11px;font-weight:600}
+.badge-gold{background:rgba(245,158,11,.15);color:var(--gold2)}
+.badge-green{background:rgba(16,185,129,.15);color:var(--green)}
+.badge-red{background:rgba(239,68,68,.15);color:var(--red)}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(4px);z-index:100;display:flex;align-items:center;justify-content:center;animation:fadeIn .2s ease}
+.modal-box{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:28px;width:90%;max-width:500px;max-height:85vh;overflow-y:auto;animation:fadeIn .3s ease .1s both}
+#particles-canvas{position:fixed;inset:0;pointer-events:none;z-index:0}
+@media(max-width:768px){.admin-sidebar{display:none}.admin-sidebar.open{display:flex;position:fixed;inset:0;z-index:90;background:var(--bg)}}
+</style>
+</head>
+<body class="bg-mesh">
+<canvas id="particles-canvas"></canvas>
+<div id="toast-container" class="fixed top-4 right-4 z-[200] flex flex-col gap-2 max-w-sm"></div>
+<div id="app" class="relative z-10 min-h-screen"></div>
+
+<script>
+/* ==================== KONFIGURASI ==================== */
+const SITE={
+    name:'Cuan dengan Baylos',
+    tagline:'Platform Afiliasi Terpercaya #1 Indonesia',
+    minWithdraw:100000,
+    defaultCommission:15
+};
+
+/* ==================== DATABASE LAYER ==================== */
+const DB={
+    get(k){try{return JSON.parse(localStorage.getItem('cuan_'+k))||[]}catch(e){return[]}},
+    set(k,v){localStorage.setItem('cuan_'+k,JSON.stringify(v))},
+    getObj(k){try{return JSON.parse(localStorage.getItem('cuan_'+k))||{}}catch(e){return{}}},
+    setObj(k,v){localStorage.setItem('cuan_'+k,JSON.stringify(v))},
+    init(){
+        if(localStorage.getItem('cuan_init'))return;
+        this.set('users',[{
+            id:'admin',name:'Admin Owner',email:'admin@cuanbaylos.com',password:'admin123',
+            role:'admin',refCode:'ADMIN',balance:0,totalEarnings:0,clicks:0,
+            createdAt:new Date().toISOString()
+        }]);
+        this.set('products',[
+            {id:'p1',name:'Kursus Trading Digital Pro',desc:'Belajar trading dari nol hingga mahir dengan 50+ video materi eksklusif.',price:350000,commission:15,image:'https://picsum.photos/seed/tradingpro/400/280',link:'https://marketplace.example.com/trading-digital-pro',active:true,createdAt:new Date().toISOString()},
+            {id:'p2',name:'Paket Template Bisnis Online',desc:'500+ template Canva untuk bisnis online, Instagram, dan konten media sosial.',price:125000,commission:20,image:'https://picsum.photos/seed/tplbiz/400/280',link:'https://marketplace.example.com/template-bisnis',active:true,createdAt:new Date().toISOString()},
+            {id:'p3',name:'Ebook Rahasia Uang Online',desc:'Panduan lengkap 200 halaman cara menghasilkan uang dari internet.',price:89000,commission:25,image:'https://picsum.photos/seed/ebookuo/400/280',link:'https://marketplace.example.com/ebook-uang-online',active:true,createdAt:new Date().toISOString()},
+            {id:'p4',name:'Akses Tools Marketing Pro',desc:'Suite lengkap tools SEO, analytics, dan email marketing untuk pebisnis online.',price:275000,commission:15,image:'https://picsum.photos/seed/toolsmkt/400/280',link:'https://marketplace.example.com/tools-marketing',active:true,createdAt:new Date().toISOString()},
+            {id:'p5',name:'Video Course Copywriting Master',desc:'Kuasai teknik copywriting yang menjual dengan 30+ modul video.',price:199000,commission:20,image:'https://picsum.photos/seed/copywr/400/280',link:'https://marketplace.example.com/copywriting-master',active:true,createdAt:new Date().toISOString()},
+            {id:'p6',name:'Bot Trading Otomatis AI',desc:'Bot trading berbasis AI dengan win rate tinggi, tinggal pasang dan biarkan bekerja.',price:500000,commission:10,image:'https://picsum.photos/seed/bottrade/400/280',link:'https://marketplace.example.com/bot-trading-ai',active:true,createdAt:new Date().toISOString()},
+            {id:'p7',name:'Masterclass Dropship 2024',desc:'Strategi dropship terbaru dari supplier terpercaya, termasuk modul iklan.',price:450000,commission:12,image:'https://picsum.photos/seed/dropship24/400/280',link:'https://marketplace.example.com/masterclass-dropship',active:true,createdAt:new Date().toISOString()},
+            {id:'p8',name:'Paket Desain Grafis Premium',desc:'1000+ asset desain grafis termasuk mockup, ikon, dan ilustrasi premium.',price:150000,commission:18,image:'https://picsum.photos/seed/dsgnpk/400/280',link:'https://marketplace.example.com/desain-grafis-premium',active:true,createdAt:new Date().toISOString()}
+        ]);
+        this.set('transactions',[]);
+        this.set('withdrawals',[]);
+        this.setObj('settings',{siteName:SITE.name,tagline:SITE.tagline,accentColor:'#f59e0b'});
+        localStorage.setItem('cuan_init','1');
+    }
+};
+
+/* ==================== STATE ==================== */
+let state={user:null,page:'home',adminTab:'products',modal:null};
+
+/* ==================== UTILITAS ==================== */
+function uid(){return Date.now().toString(36)+Math.random().toString(36).substr(2,5)}
+function fmtRp(n){return'Rp '+Number(n).toLocaleString('id-ID')}
+function refCode(name){const c=name.replace(/[^a-zA-Z]/g,'').toUpperCase().slice(0,4);return c+Math.random().toString(36).substr(2,4).toUpperCase()}
+function ago(d){const s=Math.floor((Date.now()-new Date(d))/1000);if(s<60)return s+' detik lalu';if(s<3600)return Math.floor(s/60)+' menit lalu';if(s<86400)return Math.floor(s/3600)+' jam lalu';return Math.floor(s/86400)+' hari lalu'}
+function escHtml(s){const d=document.createElement('div');d.textContent=s;return d.innerHTML}
+
+/* ==================== TOAST ==================== */
+function toast(msg,type='success'){
+    const c=document.getElementById('toast-container');
+    const colors={success:'border-emerald-500 bg-emerald-500/10',error:'border-red-500 bg-red-500/10',info:'border-amber-500 bg-amber-500/10'};
+    const icons={success:'fa-check-circle text-emerald-400',error:'fa-times-circle text-red-400',info:'fa-info-circle text-amber-400'};
+    const el=document.createElement('div');
+    el.className=`toast border-l-4 ${colors[type]} rounded-lg px-4 py-3 flex items-center gap-3`;
+    el.innerHTML=`<i class="fas ${icons[type]}"></i><span class="text-sm">${escHtml(msg)}</span>`;
+    c.appendChild(el);
+    setTimeout(()=>{el.classList.add('toast-out');setTimeout(()=>el.remove(),300)},3000);
+}
+
+/* ==================== NAVIGASI ==================== */
+function go(page,data){state.page=page;if(data)Object.assign(state,data);render();window.scrollTo(0,0)}
+
+/* ==================== RENDER UTAMA ==================== */
+function render(){
+    const app=document.getElementById('app');
+    const u=state.user;
+    let html='';
+    if(state.page==='admin'||state.page.startsWith('admin-')){
+        html=renderAdmin();
+    }else{
+        html=renderNav()+`<main>${renderPage()}</main>`;
+    }
+    app.innerHTML=html;
+    bindEvents();
+}
+
+/* ==================== NAVBAR ==================== */
+function renderNav(){
+    const u=state.user;
+    const links=u?(u.role==='admin'
+        ?`<a onclick="go('admin')" class="cursor-pointer hover:text-amber-400 transition text-sm">Admin Panel</a>
+          <a onclick="go('home')" class="cursor-pointer hover:text-amber-400 transition text-sm">Toko</a>
+          <button onclick="logout()" class="btn-outline px-4 py-2 rounded-lg text-sm"><i class="fas fa-sign-out-alt mr-1"></i>Keluar</button>`
+        :`<a onclick="go('home')" class="cursor-pointer hover:text-amber-400 transition text-sm">Toko</a>
+          <a onclick="go('dashboard')" class="cursor-pointer hover:text-amber-400 transition text-sm">Dashboard</a>
+          <span class="text-xs text-amber-400/70 hidden sm:inline">${escHtml(u.name)}</span>
+          <button onclick="logout()" class="btn-outline px-4 py-2 rounded-lg text-sm"><i class="fas fa-sign-out-alt mr-1"></i>Keluar</button>`
+    ):`<a onclick="go('home')" class="cursor-pointer hover:text-amber-400 transition text-sm">Beranda</a>
+       <a onclick="go('login')" class="cursor-pointer hover:text-amber-400 transition text-sm">Masuk</a>
+       <button onclick="go('register')" class="btn-gold px-4 py-2 rounded-lg text-sm">Daftar Gratis</button>`;
+    return`<nav class="sticky top-0 z-50 border-b border-[var(--border)] bg-[var(--bg)]/80 backdrop-blur-xl">
+        <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
+            <a onclick="go('home')" class="cursor-pointer flex items-center gap-3">
+                <div class="logo-coin">C</div>
+                <div class="leading-tight"><div class="font-display font-800 text-lg shimmer-text">CUAN</div><div class="text-[10px] text-[var(--muted)] tracking-wider">dengan Baylos</div></div>
+            </a>
+            <div class="flex items-center gap-4">${links}</div>
+        </div>
+    </nav>`;
+}
+
+/* ==================== HALAMAN ==================== */
+function renderPage(){
+    switch(state.page){
+        case'home':return renderHome();
+        case'login':return renderLogin();
+        case'register':return renderRegister();
+        case'dashboard':return renderDashboard();
+        default:return renderHome();
+    }
+}
+
+/* ==================== HOME ==================== */
+function renderHome(){
+    const products=DB.get('products').filter(p=>p.active);
+    const cards=products.map((p,i)=>{
+        const comm=Math.round(p.price*p.commission/100);
+        return`<div class="card-hover gold-border rounded-2xl overflow-hidden bg-[var(--card)] anim-in" style="animation-delay:${i*0.07}s">
+            <div class="relative h-44 overflow-hidden"><img src="${p.image}" alt="${escHtml(p.name)}" class="w-full h-full object-cover transition-transform duration-500 hover:scale-110" loading="lazy">
+            <div class="absolute top-3 right-3 badge badge-gold"><i class="fas fa-coins mr-1"></i>${p.commission}%</div></div>
+            <div class="p-5">
+                <h3 class="font-display font-600 text-base mb-1">${escHtml(p.name)}</h3>
+                <p class="text-xs text-[var(--muted)] mb-3 line-clamp-2">${escHtml(p.desc)}</p>
+                <div class="flex items-end justify-between mb-3">
+                    <div><div class="text-lg font-bold text-amber-400">${fmtRp(p.price)}</div><div class="text-[11px] text-emerald-400">Komisi: ${fmtRp(comm)}</div></div>
+                </div>
+                <button onclick="copyAffLink('${p.id}')" class="w-full btn-gold py-2.5 rounded-xl text-sm flex items-center justify-center gap-2"><i class="fas fa-link"></i>Salin Link Afiliasi</button>
+            </div>
+        </div>`;
+    }).join('');
+
+    return`<section class="relative py-20 md:py-28 text-center px-4 overflow-hidden">
+        <div class="absolute inset-0 bg-gradient-to-b from-amber-500/5 via-transparent to-transparent"></div>
+        <div class="relative max-w-3xl mx-auto">
+            <div class="anim-in inline-block mb-4 badge badge-gold text-xs"><i class="fas fa-bolt mr-1"></i>Platform Afiliasi #1</div>
+            <h1 class="anim-in-d1 font-display font-900 text-4xl md:text-6xl leading-tight mb-4"><span class="shimmer-text">Cuan</span> <span class="text-white/90">dengan Baylos</span></h1>
+            <p class="anim-in-d2 text-[var(--muted)] text-base md:text-lg mb-8 max-w-xl mx-auto">${SITE.tagline}. Daftar gratis, bagikan link produk, dan dapatkan komisi dari setiap penjualan.</p>
+            <div class="anim-in-d3 flex flex-wrap justify-center gap-3">
+                <button onclick="go('register')" class="btn-gold px-8 py-3 rounded-xl text-base" style="animation:pulse-gold 2s infinite"><i class="fas fa-rocket mr-2"></i>Mulai Sekarang</button>
+                <button onclick="document.getElementById('produk-section').scrollIntoView({behavior:'smooth'})" class="btn-outline px-8 py-3 rounded-xl text-base"><i class="fas fa-store mr-2"></i>Lihat Produk</button>
+            </div>
+            <div class="anim-in-d4 flex justify-center gap-8 mt-12 text-center">
+                <div><div class="text-2xl font-bold text-amber-400">${products.length}+</div><div class="text-xs text-[var(--muted)]">Produk</div></div>
+                <div><div class="text-2xl font-bold text-emerald-400">15%</div><div class="text-xs text-[var(--muted)]">Avg Komisi</div></div>
+                <div><div class="text-2xl font-bold text-amber-400">Gratis</div><div class="text-xs text-[var(--muted)]">Daftar</div></div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-16 px-4">
+        <div class="max-w-5xl mx-auto mb-12 text-center">
+            <h2 class="font-display font-800 text-2xl md:text-3xl mb-3">Cara Kerja</h2>
+            <p class="text-[var(--muted)] text-sm">Empat langkah mudah untuk mulai menghasilkan</p>
+        </div>
+        <div class="max-w-5xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-4">
+            ${[{i:'fa-user-plus',t:'Daftar Gratis',d:'Buat akun dalam 30 detik'},{i:'fa-hand-pointer',t:'Pilih Produk',d:'Pilih dari katalog terbaik'},{i:'fa-copy',t:'Salin Link',d:'Dapatkan link afiliasi unik'},{i:'fa-money-bill-wave',t:'Dapat Komisi',d:'Terima komisi per penjualan'}].map((s,i)=>`
+            <div class="anim-in text-center p-5 rounded-2xl bg-[var(--card)] gold-border" style="animation-delay:${i*0.1}s">
+                <div class="w-12 h-12 mx-auto mb-3 rounded-xl bg-amber-500/10 flex items-center justify-center text-amber-400 text-lg"><i class="fas ${s.i}"></i></div>
+                <div class="font-display font-600 text-sm mb-1">${s.t}</div>
+                <div class="text-xs text-[var(--muted)]">${s.d}</div>
+            </div>`).join('')}
+        </div>
+    </section>
+
+    <section id="produk-section" class="py-16 px-4">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-10">
+                <h2 class="font-display font-800 text-2xl md:text-3xl mb-3">Katalog Produk</h2>
+                <p class="text-[var(--muted)] text-sm">Pilih produk dan mulai bagikan link afiliasi kamu</p>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">${cards}</div>
+        </div>
+    </section>
+
+    <footer class="border-t border-[var(--border)] py-8 px-4 mt-12">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+            <div class="flex items-center gap-2"><div class="logo-coin w-7 h-7 text-sm">C</div><span class="font-display font-600 text-sm">Cuan dengan Baylos</span></div>
+            <p class="text-xs text-[var(--muted)]">&copy; 2024 Cuan dengan Baylos. Semua hak dilindungi.</p>
+        </div>
+    </footer>`;
+}
+
+/* ==================== LOGIN ==================== */
+function renderLogin(){
+    return`<div class="min-h-[80vh] flex items-center justify-center px-4 py-12">
+        <div class="w-full max-w-md anim-in">
+            <div class="text-center mb-8"><div class="logo-coin w-14 h-14 text-2xl mx-auto mb-3">C</div><h2 class="font-display font-800 text-2xl">Masuk ke Akun</h2><p class="text-sm text-[var(--muted)] mt-1">Masuk untuk mengelola link afiliasimu</p></div>
+            <form id="form-login" class="bg-[var(--card)] gold-border rounded-2xl p-6 space-y-4">
+                <div><label class="text-xs text-[var(--muted)] mb-1 block">Email</label><input type="email" name="email" class="input-field" placeholder="nama@email.com" required></div>
+                <div><label class="text-xs text-[var(--muted)] mb-1 block">Password</label><input type="password" name="password" class="input-field" placeholder="Masukkan password" required></div>
+                <button type="submit" class="w-full btn-gold py-3 rounded-xl text-sm mt-2">Masuk</button>
+                <p class="text-center text-xs text-[var(--muted)]">Belum punya akun? <a onclick="go('register')" class="text-amber-400 cursor-pointer hover:underline">Daftar gratis</a></p>
+            </form>
+        </div>
+    </div>`;
+}
+
+/* ==================== REGISTER ==================== */
+function renderRegister(){
+    return`<div class="min-h-[80vh] flex items-center justify-center px-4 py-12">
+        <div class="w-full max-w-md anim-in">
+            <div class="text-center mb-8"><div class="logo-coin w-14 h-14 text-2xl mx-auto mb-3">C</div><h2 class="font-display font-800 text-2xl">Buat Akun Baru</h2><p class="text-sm text-[var(--muted)] mt-1">Gratis, langsung bisa mulai promosi</p></div>
+            <form id="form-register" class="bg-[var(--card)] gold-border rounded-2xl p-6 space-y-4">
+                <div><label class="text-xs text-[var(--muted)] mb-1 block">Nama Lengkap</label><input type="text" name="name" class="input-field" placeholder="Nama kamu" required></div>
+                <div><label class="text-xs text-[var(--muted)] mb-1 block">Email</label><input type="email" name="email" class="input-field" placeholder="nama@email.com" required></div>
+                <div><label class="text-xs text-[var(--muted)] mb-1 block">Password</label><input type="password" name="password" class="input-field" placeholder="Min. 6 karakter" minlength="6" required></div>
+                <div><label class="text-xs text-[var(--muted)] mb-1 block">Konfirmasi Password</label><input type="password" name="password2" class="input-field" placeholder="Ulangi password" required></div>
+                <button type="submit" class="w-full btn-gold py-3 rounded-xl text-sm mt-2">Daftar Sekarang</button>
+                <p class="text-center text-xs text-[var(--muted)]">Sudah punya akun? <a onclick="go('login')" class="text-amber-400 cursor-pointer hover:underline">Masuk</a></p>
+            </form>
+        </div>
+    </div>`;
+}
+
+/* ==================== DASHBOARD USER ==================== */
+function renderDashboard(){
+    const u=state.user;
+    if(!u)go('login');
+    const users=DB.get('users');
+    const freshUser=users.find(x=>x.id===u.id)||u;
+    state.user=freshUser;
+    const txns=DB.get('transactions').filter(t=>t.userId===u.id);
+    const products=DB.get('products').filter(p=>p.active);
+    const totalComm=txns.reduce((s,t)=>s+t.commission,0);
+    const totalSales=txns.length;
+    const pendingWd=DB.get('withdrawals').filter(w=>w.userId===u.id&&w.status==='pending').reduce((s,w)=>s+w.amount,0);
+    const availBal=Math.max(0,freshUser.balance-pendingWd);
+
+    const prodRows=products.map(p=>{
+        const affLink=`https://cuandenganbaylos.com/go/${p.id}?ref=${freshUser.refCode}`;
+        const myTxns=txns.filter(t=>t.productId===p.id);
+        const myComm=myTxns.reduce((s,t)=>s+t.commission,0);
+        return`<tr>
+            <td><div class="flex items-center gap-2"><img src="${p.image}" class="w-10 h-10 rounded-lg object-cover"><span class="text-sm font-medium">${escHtml(p.name)}</span></div></td>
+            <td class="text-amber-400 text-sm">${fmtRp(p.price)}</td>
+            <td><span class="badge badge-gold">${p.commission}%</span></td>
+            <td class="text-emerald-400 text-sm">${fmtRp(myComm)}</td>
+            <td class="text-sm">${myTxns.length}</td>
+            <td><button onclick="copyLink('${affLink}')" class="btn-outline px-3 py-1.5 rounded-lg text-xs"><i class="fas fa-copy mr-1"></i>Salin</button></td>
+        </tr>`;
+    }).join('');
+
+    const txnRows=txns.length?txns.slice().reverse().map(t=>{
+        const prod=DB.get('products').find(p=>p.id===t.productId);
+        return`<tr>
+            <td class="text-sm">${prod?escHtml(prod.name):'Produk Dihapus'}</td>
+            <td class="text-sm text-amber-400">${fmtRp(t.amount)}</td>
+            <td class="text-sm text-emerald-400">+${fmtRp(t.commission)}</td>
+            <td class="text-xs text-[var(--muted)]">${ago(t.createdAt)}</td>
+        </tr>`;
+    }).join(''):`<tr><td colspan="4" class="text-center text-[var(--muted)] py-8 text-sm">Belum ada transaksi</td></tr>`;
+
+    return`<div class="max-w-7xl mx-auto px-4 py-8">
+        <div class="mb-8 anim-in"><h1 class="font-display font-800 text-2xl md:text-3xl mb-1">Dashboard Afiliasi</h1><p class="text-sm text-[var(--muted)]">Kelola link afiliasi dan pantau pendapatanmu</p></div>
+
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+            <div class="stat-card bg-[var(--card)] gold-border rounded-2xl p-5" style="animation-delay:.1s"><div class="text-xs text-[var(--muted)] mb-1"><i class="fas fa-wallet mr-1"></i>Saldo Tersedia</div><div class="text-xl font-bold text-amber-400">${fmtRp(availBal)}</div></div>
+            <div class="stat-card bg-[var(--card)] gold-border rounded-2xl p-5" style="animation-delay:.15s"><div class="text-xs text-[var(--muted)] mb-1"><i class="fas fa-chart-line mr-1"></i>Total Komisi</div><div class="text-xl font-bold text-emerald-400">${fmtRp(totalComm)}</div></div>
+            <div class="stat-card bg-[var(--card)] gold-border rounded-2xl p-5" style="animation-delay:.2s"><div class="text-xs text-[var(--muted)] mb-1"><i class="fas fa-shopping-cart mr-1"></i>Total Penjualan</div><div class="text-xl font-bold">${totalSales}</div></div>
+            <div class="stat-card bg-[var(--card)] gold-border rounded-2xl p-5" style="animation-delay:.25s"><div class="text-xs text-[var(--muted)] mb-1"><i class="fas fa-link mr-1"></i>Kode Referral</div><div class="text-xl font-bold text-amber-300">${freshUser.refCode}</div></div>
+        </div>
+
+        ${availBal>=SITE.minWithdraw?`<div class="anim-in mb-8 bg-emerald-500/10 border border-emerald-500/20 rounded-2xl p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+            <div><div class="text-sm font-600 text-emerald-400"><i class="fas fa-check-circle mr-1"></i>Saldo memenuhi syarat tarik</div><div class="text-xs text-[var(--muted)] mt-1">Minimum penarikan: ${fmtRp(SITE.minWithdraw)}</div></div>
+            <button onclick="requestWithdraw()" class="btn-gold px-5 py-2.5 rounded-xl text-sm whitespace-nowrap"><i class="fas fa-arrow-down mr-1"></i>Tarik Dana</button>
+        </div>`:availBal>0?`<div class="anim-in mb-8 bg-amber-500/10 border border-amber-500/20 rounded-2xl p-5"><div class="text-sm text-amber-400"><i class="fas fa-info-circle mr-1"></i>Perlu ${fmtRp(SITE.minWithdraw-availBal)} lagi untuk bisa menarik dana (min. ${fmtRp(SITE.minWithdraw)})</div></div>`:''}
+
+        <div class="anim-in-d1 bg-[var(--card)] gold-border rounded-2xl p-5 mb-8 overflow-x-auto">
+            <h2 class="font-display font-700 text-lg mb-4"><i class="fas fa-box mr-2 text-amber-400"></i>Link Afiliasi Saya</h2>
+            <table><thead><tr><th>Produk</th><th>Harga</th><th>Komisi</th><th>Earned</th><th>Sales</th><th>Aksi</th></tr></thead><tbody>${prodRows}</tbody></table>
+        </div>
+
+        <div class="anim-in-d2 bg-[var(--card)] gold-border rounded-2xl p-5 overflow-x-auto">
+            <h2 class="font-display font-700 text-lg mb-4"><i class="fas fa-history mr-2 text-amber-400"></i>Riwayat Transaksi</h2>
+            <table><thead><tr><th>Produk</th><th>Harga Jual</th><th>Komisi</th><th>Waktu</th></tr></thead><tbody>${txnRows}</tbody></table>
+        </div>
+    </div>`;
+}
+
+/* ==================== ADMIN PANEL ==================== */
+function renderAdmin(){
+    const u=state.user;
+    if(!u||u.role!=='admin')go('login');
+    const tab=state.adminTab||'products';
+    const tabs=[
+        {id:'products',icon:'fa-box',label:'Kelola Produk'},
+        {id:'users',icon:'fa-users',label:'Database User'},
+        {id:'transactions',icon:'fa-receipt',label:'Transaksi'},
+        {id:'withdrawals',icon:'fa-money-bill-transfer',label:'Penarikan'},
+        {id:'sales',icon:'fa-cart-shopping',label:'Catat Penjualan'},
+        {id:'settings',icon:'fa-gear',label:'Pengaturan'}
+    ];
+    const sidebar=tabs.map(t=>`<div class="sidebar-link ${tab===t.id?'active':''}" onclick="state.adminTab='${t.id}';render()"><i class="fas ${t.icon} w-5 text-center"></i><span>${t.label}</span></div>`).join('');
+    let content='';
+    switch(tab){
+        case'products':content=adminProducts();break;
+        case'users':content=adminUsers();break;
+        case'transactions':content=adminTransactions();break;
+        case'withdrawals':content=adminWithdrawals();break;
+        case'sales':content=adminSales();break;
+        case'settings':content=adminSettings();break;
+    }
+    return`<div class="flex min-h-screen">
+        <aside class="admin-sidebar w-60 bg-[var(--card)] border-r border-[var(--border)] p-4 flex flex-col gap-1 flex-shrink-0">
+            <div class="flex items-center gap-2 mb-6 px-2"><div class="logo-coin w-8 h-8 text-sm">C</div><div><div class="font-display font-800 text-sm">Admin Panel</div><div class="text-[10px] text-[var(--muted)]">Owner Access</div></div></div>
+            ${sidebar}
+            <div class="mt-auto pt-4 border-t border-[var(--border)]">
+                <div class="sidebar-link" onclick="go('home')"><i class="fas fa-store w-5 text-center"></i><span>Lihat Toko</span></div>
+                <div class="sidebar-link" onclick="logout()"><i class="fas fa-sign-out-alt w-5 text-center"></i><span>Keluar</span></div>
+            </div>
+        </aside>
+        <button onclick="document.querySelector('.admin-sidebar').classList.toggle('open')" class="md:hidden fixed top-4 left-4 z-[95] w-10 h-10 rounded-lg bg-[var(--card)] border border-[var(--border)] flex items-center justify-center text-[var(--muted)]"><i class="fas fa-bars"></i></button>
+        <div class="flex-1 p-4 md:p-8 overflow-x-hidden">${content}</div>
+    </div>${state.modal||''}`;
+}
+
+/* --- Admin: Produk --- */
+function adminProducts(){
+    const products=DB.get('products');
+    const rows=products.map(p=>`<tr>
+        <td><div class="flex items-center gap-2"><img src="${p.image}" class="w-10 h-10 rounded-lg object-cover"><div><div class="text-sm font-medium">${escHtml(p.name)}</div><div class="text-[10px] text-[var(--muted)]">${p.id}</div></div></div></td>
+        <td class="text-sm">${fmtRp(p.price)}</td>
+        <td><span class="badge badge-gold">${p.commission}%</span></td>
+        <td><span class="badge ${p.active?'badge-green':'badge-red'}">${p.active?'Aktif':'Nonaktif'}</span></td>
+        <td><div class="flex gap-1">
+            <button onclick="editProduct('${p.id}')" class="btn-outline px-2.5 py-1 rounded text-xs"><i class="fas fa-edit"></i></button>
+            <button onclick="deleteProduct('${p.id}')" class="border border-red-500/30 text-red-400 bg-transparent px-2.5 py-1 rounded text-xs hover:bg-red-500/10 transition cursor-pointer"><i class="fas fa-trash"></i></button>
+        </div></td>
+    </tr>`).join('');
+    return`<div class="anim-in">
+        <div class="flex items-center justify-between mb-6"><div><h1 class="font-display font-800 text-2xl">Kelola Produk</h1><p class="text-sm text-[var(--muted)]">${products.length} produk terdaftar</p></div>
+        <button onclick="addProduct()" class="btn-gold px-5 py-2.5 rounded-xl text-sm"><i class="fas fa-plus mr-1"></i>Tambah Produk</button></div>
+        <div class="bg-[var(--card)] gold-border rounded-2xl overflow-x-auto"><table><thead><tr><th>Produk</th><th>Harga</th><th>Komisi</th><th>Status</th><th>Aksi</th></tr></thead><tbody>${rows}</tbody></table></div>
+    </div>`;
+}
+
+/* --- Admin: Users --- */
+function adminUsers(){
+    const users=DB.get('users').filter(u=>u.role!=='admin');
+    const txns=DB.get('transactions');
+    const rows=users.map(u=>{
+        const uTxns=txns.filter(t=>t.userId===u.id);
+        const totalComm=uTxns.reduce((s,t)=>s+t.commission,0);
+        return`<tr>
+            <td class="text-sm font-medium">${escHtml(u.name)}</td>
+            <td class="text-sm">${escHtml(u.email)}</td>
+            <td><span class="badge badge-gold">${u.refCode}</span></td>
+            <td class="text-sm text-amber-400">${fmtRp(u.balance)}</td>
+            <td class="text-sm text-emerald-400">${fmtRp(totalComm)}</td>
+            <td class="text-sm">${uTxns.length}</td>
+            <td class="text-xs text-[var(--muted)]">${new Date(u.createdAt).toLocaleDateString('id-ID')}</td>
+            <td><button onclick="deleteUser('${u.id}')" class="border border-red-500/30 text-red-400 bg-transparent px-2.5 py-1 rounded text-xs hover:bg-red-500/10 transition cursor-pointer"><i class="fas fa-trash"></i></button></td>
+        </tr>`;
+    }).join('');
+    return`<div class="anim-in">
+        <div class="mb-6"><h1 class="font-display font-800 text-2xl">Database User</h1><p class="text-sm text-[var(--muted)]">${users.length} pengguna terdaftar</p></div>
+        <div class="bg-[var(--card)] gold-border rounded-2xl overflow-x-auto"><table><thead><tr><th>Nama</th><th>Email</th><th>Ref Code</th><th>Saldo</th><th>Total Komisi</th><th>Sales</th><th>Daftar</th><th>Aksi</th></tr></thead><tbody>${rows||'<tr><td colspan="8" class="text-center text-[var(--muted)] py-8">Belum ada user</td></tr>'}</tbody></table></div>
+    </div>`;
+}
+
+/* --- Admin: Transaksi --- */
+function adminTransactions(){
+    const txns=DB.get('transactions');
+    const users=DB.get('users');
+    const products=DB.get('products');
+    const rows=txns.slice().reverse().map(t=>{
+        const u=users.find(x=>x.id===t.userId);
+        const p=products.find(x=>x.id===t.productId);
+        return`<tr>
+            <td class="text-xs text-[var(--muted)]">${t.id.slice(0,8)}</td>
+            <td class="text-sm">${u?escHtml(u.name):'Dihapus'}</td>
+            <td class="text-sm">${p?escHtml(p.name):'Dihapus'}</td>
+            <td class="text-sm text-amber-400">${fmtRp(t.amount)}</td>
+            <td class="text-sm text-emerald-400">${fmtRp(t.commission)}</td>
+            <td class="text-xs text-[var(--muted)]">${ago(t.createdAt)}</td>
+        </tr>`;
+    }).join('');
+    return`<div class="anim-in">
+        <div class="mb-6"><h1 class="font-display font-800 text-2xl">Riwayat Transaksi</h1><p class="text-sm text-[var(--muted)]">${txns.length} transaksi tercatat</p></div>
+        <div class="bg-[var(--card)] gold-border rounded-2xl overflow-x-auto"><table><thead><tr><th>ID</th><th>Affiliator</th><th>Produk</th><th>Harga</th><th>Komisi</th><th>Waktu</th></tr></thead><tbody>${rows||'<tr><td colspan="6" class="text-center text-[var(--muted)] py-8">Belum ada transaksi</td></tr>'}</tbody></table></div>
+    </div>`;
+}
+
+/* --- Admin: Penarikan --- */
+function adminWithdrawals(){
+    const wds=DB.get('withdrawals');
+    const users=DB.get('users');
+    const rows=wds.slice().reverse().map(w=>{
+        const u=users.find(x=>x.id===w.userId);
+        const statusBadge=w.status==='pending'?'badge-gold':w.status==='paid'?'badge-green':'badge-red';
+        const statusText=w.status==='pending'?'Menunggu':w.status==='paid'?'Dibayar':'Ditolak';
+        return`<tr>
+            <td class="text-sm">${u?escHtml(u.name):'Dihapus'}</td>
+            <td class="text-sm text-amber-400">${fmtRp(w.amount)}</td>
+            <td><span class="badge ${statusBadge}">${statusText}</span></td>
+            <td class="text-xs text-[var(--muted)]">${ago(w.createdAt)}</td>
+            <td>${w.status==='pending'?`<div class="flex gap-1"><button onclick="processWd('${w.id}','paid')" class="border border-emerald-500/30 text-emerald-400 bg-transparent px-2.5 py-1 rounded text-xs hover:bg-emerald-500/10 transition cursor-pointer">Bayar</button><button onclick="processWd('${w.id}','rejected')" class="border border-red-500/30 text-red-400 bg-transparent px-2.5 py-1 rounded text-xs hover:bg-red-500/10 transition cursor-pointer">Tolak</button></div>`:'-'}</td>
+        </tr>`;
+    }).join('');
+    return`<div class="anim-in">
+        <div class="mb-6"><h1 class="font-display font-800 text-2xl">Permintaan Penarikan</h1><p class="text-sm text-[var(--muted)]">${wds.filter(w=>w.status==='pending').length} menunggu proses</p></div>
+        <div class="bg-[var(--card)] gold-border rounded-2xl overflow-x-auto"><table><thead><tr><th>User</th><th>Jumlah</th><th>Status</th><th>Waktu</th><th>Aksi</th></tr></thead><tbody>${rows||'<tr><td colspan="5" class="text-center text-[var(--muted)] py-8">Belum ada permintaan</td></tr>'}</tbody></table></div>
+    </div>`;
+}
+
+/* --- Admin: Catat Penjualan --- */
+function adminSales(){
+    const users=DB.get('users').filter(u=>u.role!=='admin');
+    const products=DB.get('products').filter(p=>p.active);
+    const optsU=users.map(u=>`<option value="${u.id}">${escHtml(u.name)} (${u.refCode})</option>`).join('');
+    const optsP=products.map(p=>`<option value="${p.id}">${escHtml(p.name)} - ${fmtRp(p.price)} [${p.commission}%]</option>`).join('');
+    return`<div class="anim-in max-w-lg">
+        <div class="mb-6"><h1 class="font-display font-800 text-2xl">Catat Penjualan</h1><p class="text-sm text-[var(--muted)]">Simulasi penjualan melalui link afiliasi user</p></div>
+        <form id="form-sale" class="bg-[var(--card)] gold-border rounded-2xl p-6 space-y-4">
+            <div><label class="text-xs text-[var(--muted)] mb-1 block">Affiliator (User)</label><select name="userId" class="input-field" required><option value="">Pilih user...</option>${optsU}</select></div>
+            <div><label class="text-xs text-[var(--muted)] mb-1 block">Produk</label><select name="productId" class="input-field" required><option value="">Pilih produk...</option>${optsP}</select></div>
+            <div id="sale-preview" class="hidden bg-amber-500/5 border border-amber-500/10 rounded-xl p-4 text-sm"></div>
+            <button type="submit" class="w-full btn-gold py-3 rounded-xl text-sm"><i class="fas fa-check mr-2"></i>Catat Penjualan</button>
+        </form>
+        ${users.length===0?'<p class="text-sm text-[var(--muted)] mt-4">Belum ada user terdaftar.</p>':''}
+    </div>`;
+}
+
+/* --- Admin: Pengaturan --- */
+function adminSettings(){
+    const s=DB.getObj('settings');
+    const colors=[{v:'#f59e0b',l:'Emas'},{v:'#10b981',l:'Hijau'},{v:'#ef4444',l:'Merah'},{v:'#f97316',l:'Oranye'},{v:'#ec4899',l:'Pink'},{v:'#06b6d4',l:'Cyan'}];
+    const colorBtns=colors.map(c=>`<button onclick="setAccent('${c.v}')" class="w-10 h-10 rounded-xl border-2 transition hover:scale-110 ${s.accentColor===c.v?'border-white scale-110':'border-transparent'}" style="background:${c.v}" title="${c.l}"></button>`).join('');
+    return`<div class="anim-in max-w-lg">
+        <div class="mb-6"><h1 class="font-display font-800 text-2xl">Pengaturan Website</h1><p class="text-sm text-[var(--muted)]">Kustomisasi tampilan dan konfigurasi platform</p></div>
+        <form id="form-settings" class="bg-[var(--card)] gold-border rounded-2xl p-6 space-y-4">
+            <div><label class="text-xs text-[var(--muted)] mb-1 block">Nama Website</label><input type="text" name="siteName" class="input-field" value="${escHtml(s.siteName||SITE.name)}"></div>
+            <div><label class="text-xs text-[var(--muted)] mb-1 block">Tagline</label><input type="text" name="tagline" class="input-field" value="${escHtml(s.tagline||SITE.tagline)}"></div>
+            <div><label class="text-xs text-[var(--muted)] mb-2 block">Warna Aksen</label><div class="flex gap-3">${colorBtns}</div></div>
+            <button type="submit" class="w-full btn-gold py-3 rounded-xl text-sm"><i class="fas fa-save mr-2"></i>Simpan Pengaturan</button>
+        </form>
+    </div>`;
+}
+
+/* ==================== MODAL PRODUK ==================== */
+function productModal(product){
+    const isEdit=!!product;
+    const p=product||{name:'',desc:'',price:'',commission:SITE.defaultCommission,image:'',link:'',active:true};
+    return`<div class="modal-overlay" onclick="if(event.target===this){state.modal=null;render()}">
+        <div class="modal-box">
+            <div class="flex items-center justify-between mb-5"><h3 class="font-display font-700 text-lg">${isEdit?'Edit':'Tambah'} Produk</h3><button onclick="state.modal=null;render()" class="text-[var(--muted)] hover:text-white transition"><i class="fas fa-times"></i></button></div>
+            <form id="form-product" class="space-y-3">
+                <input type="hidden" name="id" value="${isEdit?p.id:''}">
+                <div><label class="text-xs text-[var(--muted)] mb-1 block">Nama Produk</label><input type="text" name="name" class="input-field" value="${escHtml(p.name)}" required></div>
+                <div><label class="text-xs text-[var(--muted)] mb-1 block">Deskripsi</label><textarea name="desc" class="input-field" rows="2" required>${escHtml(p.desc)}</textarea></div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div><label class="text-xs text-[var(--muted)] mb-1 block">Harga (Rp)</label><input type="number" name="price" class="input-field" value="${p.price}" min="1000" required></div>
+                    <div><label class="text-xs text-[var(--muted)] mb-1 block">Komisi (%)</label><input type="number" name="commission" class="input-field" value="${p.commission}" min="1" max="90" required></div>
+                </div>
+                <div><label class="text-xs text-[var(--muted)] mb-1 block">URL Gambar</label><input type="url" name="image" class="input-field" value="${escHtml(p.image)}" placeholder="https://..." required></div>
+                <div><label class="text-xs text-[var(--muted)] mb-1 block">Link Afiliasi Asli</label><input type="url" name="link" class="input-field" value="${escHtml(p.link)}" placeholder="https://marketplace.example.com/..." required></div>
+                <div class="flex items-center gap-2"><input type="checkbox" name="active" id="chk-active" ${p.active?'checked':''}><label for="chk-active" class="text-sm">Produk aktif</label></div>
+                <button type="submit" class="w-full btn-gold py-3 rounded-xl text-sm mt-2">${isEdit?'Simpan Perubahan':'Tambah Produk'}</button>
+            </form>
+        </div>
+    </div>`;
+}
+
+/* ==================== AKSI-AKSI ==================== */
+function copyAffLink(pid){
+    if(!state.user){toast('Silakan login atau daftar terlebih dahulu','info');go('login');return}
+    const u=state.user;const users=DB.get('users');const fresh=users.find(x=>x.id===u.id);
+    if(!fresh){go('login');return}
+    const link=`https://cuandenganbaylos.com/go/${pid}?ref=${fresh.refCode}`;
+    copyLink(link);
+    /* Catat klik */
+    fresh.clicks=(fresh.clicks||0)+1;
+    const allUsers=DB.get('users');const idx=allUsers.findIndex(x=>x.id===fresh.id);if(idx>-1){allUsers[idx]=fresh;DB.set('users',allUsers);state.user=fresh}
+}
+
+function copyLink(link){
+    navigator.clipboard.writeText(link).then(()=>toast('Link afiliasi berhasil disalin!','success')).catch(()=>{
+        const ta=document.createElement('textarea');ta.value=link;document.body.appendChild(ta);ta.select();document.execCommand('copy');ta.remove();toast('Link afiliasi berhasil disalin!','success')
+    });
+}
+
+function logout(){state.user=null;state.page='home';state.adminTab='products';render();toast('Berhasil keluar','info')}
+
+function requestWithdraw(){
+    const u=state.user;const users=DB.get('users');const fresh=users.find(x=>x.id===u.id);if(!fresh)return;
+    const pendingWd=DB.get('withdrawals').filter(w=>w.userId===u.id&&w.status==='pending').reduce((s,w)=>s+w.amount,0);
+    const avail=Math.max(0,fresh.balance-pendingWd);
+    if(avail<SITE.minWithdraw){toast('Saldo tidak mencukupi','error');return}
+    const wds=DB.get('withdrawals');wds.push({id:uid(),userId:u.id,amount:avail,status:'pending',createdAt:new Date().toISOString()});DB.set('withdrawals',wds);
+    toast('Permintaan penarikan berhasil dikirim!','success');render();
+}
+
+function processWd(wid,status){
+    const wds=DB.get('withdrawals');const idx=wds.findIndex(w=>w.id===wid);if(idx<0)return;
+    const w=wds[idx];
+    if(status==='rejected'){
+        /* Kembalikan saldo */
+        const users=DB.get('users');const uIdx=users.findIndex(u=>u.id===w.userId);
+        if(uIdx>-1){users[uIdx].balance=(users[uIdx].balance||0)+w.amount;DB.set('users',users)}
+    }else if(status==='paid'){
+        /* Kurangi saldo */
+        const users=DB.get('users');const uIdx=users.findIndex(u=>u.id===w.userId);
+        if(uIdx>-1){users[uIdx].balance=Math.max(0,(users[uIdx].balance||0)-w.amount);DB.set('users',users)}
+    }
+    wds[idx].status=status;wds[idx].processedAt=new Date().toISOString();DB.set('withdrawals',wds);
+    toast(status==='paid'?'Penarikan ditandai dibayar':'Penarikan ditolak',status==='paid'?'success':'info');render();
+}
+
+function addProduct(){state.modal=productModal(null);render()}
+function editProduct(id){const p=DB.get('products').find(x=>x.id===id);if(p){state.modal=productModal(p);render()}}
+function deleteProduct(id){if(!confirm('Hapus produk ini?'))return;const ps=DB.get('products').filter(p=>p.id!==id);DB.set('products',ps);toast('Produk dihapus','info');render()}
+function deleteUser(id){if(!confirm('Hapus user ini?'))return;const us=DB.get('users').filter(u=>u.id!==id);DB.set('users',us);toast('User dihapus','info');render()}
+
+function setAccent(color){
+    document.documentElement.style.setProperty('--accent',color);
+    document.documentElement.style.setProperty('--gold',color);
+    /* Hitung varian warna */
+    const s=DB.getObj('settings');s.accentColor=color;DB.setObj('settings',s);
+    toast('Warna aksen diperbarui','success');render();
+}
+
+/* ==================== EVENT BINDING ==================== */
+function bindEvents(){
+    /* Login */
+    const fl=document.getElementById('form-login');
+    if(fl)fl.onsubmit=function(e){
+        e.preventDefault();const fd=new FormData(fl);
+        const users=DB.get('users');const u=users.find(x=>x.email===fd.get('email')&&x.password===fd.get('password'));
+        if(!u){toast('Email atau password salah','error');return}
+        state.user=u;state.page=u.role==='admin'?'admin':'dashboard';render();toast('Selamat datang, '+u.name,'success');
+    };
+    /* Register */
+    const fr=document.getElementById('form-register');
+    if(fr)fr.onsubmit=function(e){
+        e.preventDefault();const fd=new FormData(fr);
+        if(fd.get('password')!==fd.get('password2')){toast('Password tidak cocok','error');return}
+        const users=DB.get('users');
+        if(users.find(x=>x.email===fd.get('email'))){toast('Email sudah terdaftar','error');return}
+        const newUser={id:uid(),name:fd.get('name'),email:fd.get('email'),password:fd.get('password'),role:'user',refCode:refCode(fd.get('name')),balance:0,totalEarnings:0,clicks:0,createdAt:new Date().toISOString()};
+        users.push(newUser);DB.set('users',users);
+        state.user=newUser;state.page='dashboard';render();toast('Pendaftaran berhasil! Selamat datang','success');
+    };
+    /* Product Form */
+    const fp=document.getElementById('form-product');
+    if(fp)fp.onsubmit=function(e){
+        e.preventDefault();const fd=new FormData(fp);const products=DB.get('products');
+        const data={name:fd.get('name'),desc:fd.get('desc'),price:Number(fd.get('price')),commission:Number(fd.get('commission')),image:fd.get('image'),link:fd.get('link'),active:!!fd.get('active')};
+        const editId=fd.get('id');
+        if(editId){const idx=products.findIndex(p=>p.id===editId);if(idx>-1){products[idx]={...products[idx],...data}}}
+        else{data.id=uid();data.createdAt=new Date().toISOString();products.push(data)}
+        DB.set('products',products);state.modal=null;render();toast(editId?'Produk diperbarui':'Produk ditambahkan','success');
+    };
+    /* Sale Form */
+    const fs=document.getElementById('form-sale');
+    if(fs){
+        const selP=fs.querySelector('[name="productId"]');
+        const preview=document.getElementById('sale-preview');
+        if(selP)selP.onchange=function(){
+            const p=DB.get('products').find(x=>x.id===this.value);
+            if(p){const comm=Math.round(p.price*p.commission/100);preview.classList.remove('hidden');preview.innerHTML=`<div class="text-[var(--muted)] mb-1">Preview:</div><div>Harga: <span class="text-amber-400">${fmtRp(p.price)}</span> &rarr; Komisi: <span class="text-emerald-400">${fmtRp(comm)}</span> (${p.commission}%)</div>`}
+            else{preview.classList.add('hidden')}
+        };
+        fs.onsubmit=function(e){
+            e.preventDefault();const fd=new FormData(fs);
+            const userId=fd.get('userId');const productId=fd.get('productId');
+            if(!userId||!productId){toast('Pilih user dan produk','error');return}
+            const product=DB.get('products').find(p=>p.id===productId);if(!product){toast('Produk tidak ditemukan','error');return}
+            const commission=Math.round(product.price*product.commission/100);
+            /* Catat transaksi */
+            const txns=DB.get('transactions');txns.push({id:uid(),userId,productId,amount:product.price,commission,createdAt:new Date().toISOString()});DB.set('transactions',txns);
+            /* Tambah saldo user */
+            const users=DB.get('users');const uIdx=users.findIndex(u=>u.id===userId);
+            if(uIdx>-1){users[uIdx].balance=(users[uIdx].balance||0)+commission;users[uIdx].totalEarnings=(users[uIdx].totalEarnings||0)+commission;DB.set('users',users)}
+            toast(`Penjualan dicatat! Komisi ${fmtRp(commission)} dikreditkan`,'success');fs.reset();if(preview)preview.classList.add('hidden');render();
+        };
+    }
+    /* Settings Form */
+    const fset=document.getElementById('form-settings');
+    if(fset)fset.onsubmit=function(e){
+        e.preventDefault();const fd=new FormData(fset);
+        const s=DB.getObj('settings');s.siteName=fd.get('siteName');s.tagline=fd.get('tagline');DB.setObj('settings',s);
+        SITE.name=s.siteName;SITE.tagline=s.tagline;document.title=s.siteName+' - Platform Afiliasi';toast('Pengaturan disimpan','success');render();
+    };
+}
+
+/* ==================== PARTIKEL BACKGROUND ==================== */
+function initParticles(){
+    const canvas=document.getElementById('particles-canvas');const ctx=canvas.getContext('2d');
+    let w,h,particles=[];
+    function resize(){w=canvas.width=window.innerWidth;h=canvas.height=window.innerHeight}
+    resize();window.addEventListener('resize',resize);
+    for(let i=0;i<40;i++){particles.push({x:Math.random()*w,y:Math.random()*h,r:Math.random()*2+0.5,vx:(Math.random()-0.5)*0.3,vy:-Math.random()*0.4-0.1,a:Math.random()*0.4+0.1})}
+    function draw(){
+        ctx.clearRect(0,0,w,h);
+        particles.forEach(p=>{
+            ctx.beginPath();ctx.arc(p.x,p.y,Math.max(0.5,p.r),0,Math.PI*2);
+            ctx.fillStyle=`rgba(245,158,11,${p.a})`;ctx.fill();
+            p.x+=p.vx;p.y+=p.vy;
+            if(p.y<-10){p.y=h+10;p.x=Math.random()*w}
+            if(p.x<-10)p.x=w+10;if(p.x>w+10)p.x=-10;
+        });
+        requestAnimationFrame(draw);
+    }
+    if(!window.matchMedia('(prefers-reduced-motion: reduce)').matches)draw();
+}
+
+/* ==================== INIT ==================== */
+DB.init();
+/* Cek sesi dari localStorage */
+const savedUser=localStorage.getItem('cuan_session');
+if(savedUser){try{const u=JSON.parse(savedUser);const users=DB.get('users');const fresh=users.find(x=>x.id===u.id);if(fresh){state.user=fresh;if(fresh.role==='admin')state.page='admin'}}catch(e){}}
+render();
+initParticles();
+
+/* Simpan sesi saat berubah */
+const origRender=render;
+render=function(){
+    origRender();
+    if(state.user)localStorage.setItem('cuan_session',JSON.stringify({id:state.user.id}));
+    else localStorage.removeItem('cuan_session');
+};
+/* Re-render sekali untuk simpan sesi */
+if(state.user)localStorage.setItem('cuan_session',JSON.stringify({id:state.user.id}));
+</script>
+</body>
+</html>
