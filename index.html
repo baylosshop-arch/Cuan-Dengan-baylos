@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Baylos Shop - Ecosystem & Admin Dashboard</title>
+  
+  <!-- Fonts & Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <style>
+    :root {
+      --primary: #4f46e5;
+      --primary-hover: #4338ca;
+      --primary-light: #eef2ff;
+      --accent: #10b981;
+      --accent-light: #ecfdf5;
+      --danger: #ef4444;
+      --dark: #0f172a;
+      --gray-light: #f8fafc;
+      --gray-border: #e2e8f0;
+      --text: #334155;
+      --text-muted: #64748b;
+      --shadow-sm: 0 4px 6px -1px rgba(0,0,0,0.05);
+      --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.08);
+      --radius-lg: 20px;
+      --radius-md: 12px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
+    body { background-color: var(--gray-light); color: var(--text); line-height: 1.6; }
+
+    /* NAVBAR */
+    .navbar {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--gray-border); padding: 1rem 5%;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .brand { display: flex; align-items: center; gap: 12px; font-size: 1.4rem; font-weight: 800; color: var(--dark); text-decoration: none; }
+    .brand-icon { background: linear-gradient(135deg, var(--primary), #818cf8); color: white; width: 40px; height: 40px; border-radius: 12px; display: flex; align-items: center; justify-content: center; }
+
+    .nav-controls { display: flex; align-items: center; gap: 12px; }
+    .role-switcher { background: #e2e8f0; padding: 4px; border-radius: 30px; display: flex; gap: 4px; }
+    .role-btn { border: none; padding: 6px 14px; border-radius: 20px; font-size: 0.8rem; font-weight: 700; cursor: pointer; transition: 0.2s; }
+    .role-btn.active { background: white; color: var(--primary); box-shadow: var(--shadow-sm); }
+
+    /* BUTTONS */
+    .btn { padding: 0.65rem 1.3rem; border-radius: var(--radius-md); font-weight: 600; font-size: 0.88rem; border: none; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; transition: 0.2s; }
+    .btn-primary { background: var(--primary); color: white; }
+    .btn-primary:hover { background: var(--primary-hover); }
+    .btn-accent { background: var(--accent); color: white; }
+    .btn-danger { background: var(--danger); color: white; }
+    .btn-outline { background: white; border: 1px solid var(--gray-border); color: var(--dark); }
+    .btn-sm { padding: 0.4rem 0.8rem; font-size: 0.78rem; }
+
+    /* SECTIONS */
+    .view-section { display: none; padding: 2rem 5% 5rem; max-width: 1250px; margin: 0 auto; }
+    .view-section.active { display: block; }
+
+    /* ADMIN DASHBOARD */
+    .admin-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; background: var(--dark); color: white; padding: 2rem; border-radius: var(--radius-lg); }
+    .admin-card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5rem; margin-bottom: 2.5rem; }
+    .admin-card { background: white; padding: 1.5rem; border-radius: var(--radius-md); border: 1px solid var(--gray-border); box-shadow: var(--shadow-sm); }
+    .admin-card-title { font-size: 0.8rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase; }
+    .admin-card-value { font-size: 1.8rem; font-weight: 800; color: var(--dark); margin-top: 6px; }
+
+    .data-table-wrap { background: white; border-radius: var(--radius-lg); border: 1px solid var(--gray-border); overflow: hidden; box-shadow: var(--shadow-sm); margin-bottom: 2.5rem; }
+    .table-title { padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--gray-border); font-weight: 700; font-size: 1.1rem; display: flex; justify-content: space-between; align-items: center; }
+    table { width: 100%; border-collapse: collapse; text-align: left; font-size: 0.9rem; }
+    th { background: #f8fafc; padding: 1rem 1.5rem; color: var(--text-muted); font-weight: 700; border-bottom: 1px solid var(--gray-border); }
+    td { padding: 1rem 1.5rem; border-bottom: 1px solid var(--gray-border); }
+
+    /* USER CATALOG */
+    .hero { text-align: center; padding: 3rem 1rem 4rem; background: radial-gradient(circle at top right, #e0e7ff 0%, #ffffff 60%); }
+    .hero h1 { font-size: 2.8rem; font-weight: 800; color: var(--dark); margin-bottom: 0.8rem; }
+    .hero h1 span { color: var(--primary); }
+
+    .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1.8rem; }
+    .product-card { background: white; border-radius: var(--radius-lg); overflow: hidden; border: 1px solid var(--gray-border); box-shadow: var(--shadow-sm); display: flex; flex-direction: column; }
+    .card-img-wrap { height: 200px; overflow: hidden; position: relative; }
+    .card-img { width: 100%; height: 100%; object-fit: cover; }
+    .card-body { padding: 1.25rem; display: flex; flex-direction: column; flex-grow: 1; }
+    .product-title { font-size: 1rem; font-weight: 700; color: var(--dark); margin-bottom: 0.4rem; }
+    .product-price { font-size: 1.2rem; font-weight: 800; color: var(--primary); margin-bottom: 1rem; }
+    .card-actions { margin-top: auto; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+
+    /* MODAL */
+    .modal-backdrop { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px); display: none; justify-content: center; align-items: center; z-index: 1000; padding: 1rem; }
+    .modal-box { background: white; border-radius: var(--radius-lg); padding: 2rem; width: 100%; max-width: 460px; }
+    .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.2rem; }
+    .form-group { margin-bottom: 1rem; }
+    .form-group label { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 0.4rem; }
+    .form-input { width: 100%; padding: 0.75rem 1rem; border: 1px solid var(--gray-border); border-radius: 8px; font-size: 0.9rem; outline: none; }
+
+    .status-badge { padding: 4px 10px; border-radius: 20px; font-weight: 700; font-size: 0.75rem; }
+    .status-pending { background: #fef3c7; color: #d97706; }
+    .status-approved { background: #dcfce7; color: #15803d; }
+  </style>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <a href="#" class="brand">
+      <div class="brand-icon"><i class="fa-solid fa-gem"></i></div>
+      Baylos Shop
+    </a>
+
+    <div class="nav-controls">
+      <div class="role-switcher">
+        <button class="role-btn active" id="btnRoleUser" onclick="switchRole('user')"><i class="fa-solid fa-user"></i> Mode User</button>
+        <button class="role-btn" id="btnRoleAdmin" onclick="switchRole('admin')"><i class="fa-solid fa-user-shield"></i> Mode Admin</button>
+      </div>
+
+      <button class="btn btn-outline btn-sm" onclick="openModal('loginModal')">
+        <i class="fa-solid fa-right-to-bracket"></i> Login Admin
+      </button>
+    </div>
+  </nav>
+
+  <!-- ================= TAMPILAN USER / PENGGUNA ================= -->
+  <div id="userView" class="view-section active">
+    <header class="hero">
+      <h1>Belanja & Bagikan <span>Link Afiliasi</span></h1>
+      <p>Salin link referral produk favorit Anda dan raih bagi hasil komisi secara otomatis.</p>
+    </header>
+
+    <div class="product-grid" id="userProductGrid">
+      <!-- Dynamic via JS -->
+    </div>
+  </div>
+
+  <!-- ================= TAMPILAN ADMIN DASHBOARD ================= -->
+  <div id="adminView" class="view-section">
+    <div class="admin-header">
+      <div>
+        <h2>Dashboard Admin & Owner</h2>
+        <p style="color: #94a3b8; font-size: 0.9rem;">Kelola produk, komisi, dan persetujuan pencairan saldo mitra.</p>
+      </div>
+      <button class="btn btn-accent" onclick="openModal('addProductModal')">
+        <i class="fa-solid fa-plus"></i> Tambah Produk Baru
+      </button>
+    </div>
+
+    <!-- REKAP KEUANGAN OWNER -->
+    <div class="admin-card-grid">
+      <div class="admin-card">
+        <div class="admin-card-title">Total Komisi E-Commerce</div>
+        <div class="admin-card-value" style="color: var(--accent);">Rp 4.850.000</div>
+      </div>
+      <div class="admin-card">
+        <div class="admin-card-title">Komisi Dibayarkan Ke User</div>
+        <div class="admin-card-value">Rp 3.395.000</div>
+      </div>
+      <div class="admin-card">
+        <div class="admin-card-title">Keuntungan Bersih Owner</div>
+        <div class="admin-card-value" style="color: var(--primary);">Rp 1.455.000</div>
+      </div>
+      <div class="admin-card">
+        <div class="admin-card-title">Permintaan Tarik Saldo Pending</div>
+        <div class="admin-card-value" style="color: #d97706;">1 Transaksi</div>
+      </div>
+    </div>
+
+    <!-- TABEL PENCAIRAN SALDO -->
+    <div class="data-table-wrap">
+      <div class="table-title">
+        <span><i class="fa-solid fa-file-invoice-dollar"></i> Permintaan Pencairan Saldo User</span>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>ID User</th>
+            <th>Metode</th>
+            <th>No. Rekening/E-Wallet</th>
+            <th>Jumlah Withdraw</th>
+            <th>Status</th>
+            <th>Aksi Admin</th>
+          </tr>
+        </thead>
+        <tbody id="withdrawTableBody">
+          <tr>
+            <td><b>USER_BUDI99</b></td>
+            <td>DANA</td>
+            <td>081234567890 (a.n Budi)</td>
+            <td>Rp 150.000</td>
+            <td><span class="status-badge status-pending">Pending</span></td>
+            <td>
+              <button class="btn btn-accent btn-sm" onclick="approveWithdraw(this)"><i class="fa-solid fa-check"></i> Setujui</button>
+            </td>
+          </tr>
+          <tr>
+            <td><b>USER_SISKA</b></td>
+            <td>Bank BCA</td>
+            <td>1234567890 (a.n Siska)</td>
+            <td>Rp 320.000</td>
+            <td><span class="status-badge status-approved">Selesai</span></td>
+            <td><span style="font-size: 0.8rem; color: var(--text-muted);">Transfer Berhasil</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- TABEL MANAJEMEN PRODUK AFILIASI -->
+    <div class="data-table-wrap">
+      <div class="table-title">
+        <span><i class="fa-solid fa-boxes-stacked"></i> Katalog & Link Afiliasi Owner</span>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Gambar</th>
+            <th>Nama Produk</th>
+            <th>Harga</th>
+            <th>Link Afiliasi Shopee/Tokopedia</th>
+            <th>Aksi</th>
+          </tr>
+        </thead>
+        <tbody id="adminProductTableBody">
+          <!-- Dynamic via JS -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- MODAL LOGIN ADMIN -->
+  <div class="modal-backdrop" id="loginModal">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3>Login Sistem Admin</h3>
+        <button style="border:none; background:none; cursor:pointer;" onclick="closeModal('loginModal')"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <form onsubmit="handleLogin(event)">
+        <div class="form-group">
+          <label>Username / Email</label>
+          <input type="text" id="loginUser" class="form-input" placeholder="admin" required>
+        </div>
+        <div class="form-group">
+          <label>Password</label>
+          <input type="password" class="form-input" placeholder="••••••••" required>
+        </div>
+        <p style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 1rem;">*Ketik <b>admin</b> untuk masuk langsung ke Dashboard Admin.</p>
+        <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center;">Masuk Akun</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL TAMBAH PRODUK -->
+  <div class="modal-backdrop" id="addProductModal">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3>Tambah Produk Afiliasi Baru</h3>
+        <button style="border:none; background:none; cursor:pointer;" onclick="closeModal('addProductModal')"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <form onsubmit="handleAddProduct(event)">
+        <div class="form-group">
+          <label>Nama Produk</label>
+          <input type="text" id="pTitle" class="form-input" placeholder="Contoh: Sepatu Running Casual" required>
+        </div>
+        <div class="form-group">
+          <label>Harga (Rp)</label>
+          <input type="number" id="pPrice" class="form-input" placeholder="185000" required>
+        </div>
+        <div class="form-group">
+          <label>URL Gambar Produk</label>
+          <input type="url" id="pImg" class="form-input" placeholder="https://images.unsplash.com/..." required>
+        </div>
+        <div class="form-group">
+          <label>Link Afiliasi Marketplace (Shopee/Tokopedia)</label>
+          <input type="url" id="pLink" class="form-input" placeholder="https://shope.ee/..." required>
+        </div>
+        <button type="submit" class="btn btn-accent" style="width: 100%; justify-content: center; margin-top: 1rem;">Simpan Produk</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- JAVASCRIPT LOGIC -->
+  <script>
+    // Data Katalog Produk
+    let products = [
+      {
+        id: 1,
+        title: "Sepatu Sneakers Running Sport Modern",
+        price: 185000,
+        img: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=600&q=80",
+        link: "https://shopee.co.id"
+      },
+      {
+        id: 2,
+        title: "Smartwatch Fitness Tracker Display OLED",
+        price: 245000,
+        img: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&q=80",
+        link: "https://tokopedia.com"
+      }
+    ];
+
+    // Beralih Tampilan (Mode User vs Admin)
+    function switchRole(role) {
+      document.getElementById('userView').classList.remove('active');
+      document.getElementById('adminView').classList.remove('active');
+      document.getElementById('btnRoleUser').classList.remove('active');
+      document.getElementById('btnRoleAdmin').classList.remove('active');
+
+      if (role === 'admin') {
+        document.getElementById('adminView').classList.add('active');
+        document.getElementById('btnRoleAdmin').classList.add('active');
+        renderAdminTables();
+      } else {
+        document.getElementById('userView').classList.add('active');
+        document.getElementById('btnRoleUser').classList.add('active');
+        renderUserProducts();
+      }
+    }
+
+    // Modal Control
+    function openModal(id) { document.getElementById(id).style.display = 'flex'; }
+    function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+
+    // Render Produk Tampilan User
+    function renderUserProducts() {
+      const container = document.getElementById('userProductGrid');
+      container.innerHTML = '';
+
+      products.forEach(p => {
+        const referralLink = `${window.location.origin}${window.location.pathname}?ref=USER_MITRA&prod=${p.id}`;
+        container.innerHTML += `
+          <div class="product-card">
+            <div class="card-img-wrap">
+              <img src="${p.img}" alt="${p.title}" class="card-img">
+            </div>
+            <div class="card-body">
+              <h3 class="product-title">${p.title}</h3>
+              <div class="product-price">Rp ${p.price.toLocaleString('id-ID')}</div>
+              <div class="card-actions">
+                <button class="btn btn-outline btn-sm" onclick="navigator.clipboard.writeText('${referralLink}'); alert('Link Referral disalin!');">
+                  <i class="fa-solid fa-copy"></i> Salin Link
+                </button>
+                <button class="btn btn-primary btn-sm" onclick="window.open('${p.link}', '_blank')">
+                  <i class="fa-solid fa-cart-shopping"></i> Beli
+                </button>
+              </div>
+            </div>
+          </div>
+        `;
+      });
+    }
+
+    // Render Tabel Dashboard Admin
+    function renderAdminTables() {
+      const tbody = document.getElementById('adminProductTableBody');
+      tbody.innerHTML = '';
+
+      products.forEach((p, index) => {
+        tbody.innerHTML += `
+          <tr>
+            <td><img src="${p.img}" width="40" height="40" style="border-radius:6px; object-fit:cover;"></td>
+            <td><b>${p.title}</b></td>
+            <td>Rp ${p.price.toLocaleString('id-ID')}</td>
+            <td style="color: var(--primary); font-size: 0.8rem;">${p.link}</td>
+            <td>
+              <button class="btn btn-danger btn-sm" onclick="deleteProduct(${index})"><i class="fa-solid fa-trash"></i> Hapus</button>
+            </td>
+          </tr>
+        `;
+      });
+    }
+
+    // Tambah Produk Baru (Admin)
+    function handleAddProduct(e) {
+      e.preventDefault();
+      const newProd = {
+        id: products.length + 1,
+        title: document.getElementById('pTitle').value,
+        price: parseInt(document.getElementById('pPrice').value),
+        img: document.getElementById('pImg').value,
+        link: document.getElementById('pLink').value
+      };
+
+      products.unshift(newProd);
+      closeModal('addProductModal');
+      e.target.reset();
+      renderAdminTables();
+      renderUserProducts();
+    }
+
+    // Hapus Produk (Admin)
+    function deleteProduct(index) {
+      if (confirm('Yakin ingin menghapus produk ini dari katalog?')) {
+        products.splice(index, 1);
+        renderAdminTables();
+        renderUserProducts();
+      }
+    }
+
+    // Setujui Penarikan Saldo (Admin)
+    function approveWithdraw(button) {
+      const row = button.closest('tr');
+      row.children[4].innerHTML = '<span class="status-badge status-approved">Selesai</span>';
+      row.children[5].innerHTML = '<span style="font-size: 0.8rem; color: var(--text-muted);">Transfer Berhasil</span>';
+      alert('Pencairan komisi telah disetujui.');
+    }
+
+    // Form Login Admin
+    function handleLogin(e) {
+      e.preventDefault();
+      const userInput = document.getElementById('loginUser').value.toLowerCase();
+      closeModal('loginModal');
+
+      if (userInput === 'admin') {
+        switchRole('admin');
+        alert('Login Admin Berhasil!');
+      } else {
+        switchRole('user');
+        alert('Login User Berhasil!');
+      }
+    }
+
+    // Inisialisasi awal
+    document.addEventListener('DOMContentLoaded', () => {
+      renderUserProducts();
+    });
+  </script>
+</body>
+</html>
