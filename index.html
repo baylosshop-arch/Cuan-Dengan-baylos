@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cuan dengan Baylos</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@200;400;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script>
+tailwind.config={theme:{extend:{fontFamily:{display:['Outfit','sans-serif'],body:['Space Grotesk','sans-serif']}}}}
+</script>
+<style>
+:root{--bg:#08080f;--bg2:#0e0e1a;--card:#12121f;--card2:#171728;--border:#1f1f3a;--gold:#f59e0b;--gold2:#fbbf24;--gold3:#d97706;--green:#10b981;--red:#ef4444;--blue:#3b82f6;--text:#e8e8f0;--muted:#6b6b8a}
+*{margin:0;padding:0;box-sizing:border-box;scrollbar-width:thin;scrollbar-color:#2a2a50 var(--bg2)}
+::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:var(--bg2)}::-webkit-scrollbar-thumb{background:#2a2a50;border-radius:3px}
+body{font-family:'Space Grotesk',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+@keyframes shimmer{0%{background-position:-200% center}100%{background-position:200% center}}
+@keyframes pulseG{0%,100%{box-shadow:0 0 0 0 rgba(245,158,11,.3)}50%{box-shadow:0 0 16px 3px rgba(245,158,11,.1)}}
+@keyframes barW{from{width:0}to{width:var(--w)}}
+.anim{animation:fadeIn .4s ease both}.d1{animation-delay:.06s}.d2{animation-delay:.12s}.d3{animation-delay:.18s}.d4{animation-delay:.24s}
+.shim{background:linear-gradient(90deg,var(--gold3),var(--gold2),#fff,var(--gold2),var(--gold3));background-size:200% auto;-webkit-background-clip:text;-webkit-text-fill-color:transparent;animation:shimmer 3.5s linear infinite}
+.gb{border:1px solid rgba(245,158,11,.15)}.gb:hover{border-color:rgba(245,158,11,.3)}
+.ch{transition:all .25s}.ch:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,.4)}
+.bg{background:linear-gradient(135deg,var(--gold3),var(--gold));color:#000;font-weight:600;border:none;cursor:pointer;transition:all .2s;font-family:inherit}
+.bg:hover{box-shadow:0 4px 16px rgba(245,158,11,.3);transform:translateY(-1px)}
+.bo{border:1px solid var(--gold);color:var(--gold);background:0 0;cursor:pointer;transition:all .2s;font-family:inherit}
+.bo:hover{background:rgba(245,158,11,.08)}
+.bs{padding:6px 14px;border-radius:8px;font-size:12px}
+.inp{background:var(--bg);border:1px solid var(--border);color:var(--text);padding:10px 14px;border-radius:8px;width:100%;font-family:inherit;font-size:13px;transition:border .2s;outline:none}
+.inp:focus{border-color:var(--gold)}.inp::placeholder{color:var(--muted)}
+.inp-err{border-color:var(--red)!important}
+.lbl{display:block;font-size:11px;color:var(--muted);margin-bottom:4px;font-weight:500}
+.coin{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--gold3),var(--gold2));display:flex;align-items:center;justify-content:center;font-family:'Outfit';font-weight:900;font-size:17px;color:#000;flex-shrink:0}
+.toast{animation:fadeIn .2s ease both;backdrop-filter:blur(8px)}.toast-out{animation:fadeIn .2s ease reverse both}
+.sl{display:flex;align-items:center;gap:10px;padding:9px 14px;border-radius:8px;cursor:pointer;transition:all .15s;color:var(--muted);font-size:13px;font-weight:500}
+.sl:hover,.sl.act{background:rgba(245,158,11,.07);color:var(--gold)}
+table{width:100%;border-collapse:collapse}
+th{text-align:left;padding:9px 12px;font-size:10px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);border-bottom:1px solid var(--border);font-weight:600}
+td{padding:9px 12px;font-size:12px;border-bottom:1px solid rgba(31,31,58,.5)}
+tr:hover td{background:rgba(245,158,11,.02)}
+.bd{display:inline-block;padding:2px 8px;border-radius:99px;font-size:10px;font-weight:600}
+.bd-g{background:rgba(245,158,11,.1);color:var(--gold2)}.bd-e{background:rgba(16,185,129,.1);color:var(--green)}.bd-r{background:rgba(239,68,68,.1);color:var(--red)}.bd-b{background:rgba(59,130,246,.1);color:#60a5fa}
+.mo{position:fixed;inset:0;background:rgba(0,0,0,.6);backdrop-filter:blur(3px);z-index:100;display:flex;align-items:center;justify-content:center;animation:fadeIn .12s ease}
+.mb{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:0;width:94%;max-width:520px;max-height:88vh;overflow-y:auto;animation:fadeIn .2s ease .04s both}
+.mb-h{padding:20px 24px 0;display:flex;align-items:center;justify-content:space-between}
+.mb-b{padding:20px 24px 24px}
+.ptab{padding:8px 16px;font-size:12px;font-weight:600;color:var(--muted);border-bottom:2px solid transparent;cursor:pointer;transition:all .15s}
+.ptab:hover{color:var(--text)}.ptab.act{color:var(--gold);border-color:var(--gold)}
+.avatar{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,var(--gold3),var(--gold));display:flex;align-items:center;justify-content:center;font-family:'Outfit';font-weight:800;font-size:16px;color:#000;flex-shrink:0}
+.avatar-sm{width:32px;height:32px;font-size:12px}
+.avatar-lg{width:72px;height:72px;font-size:28px}
+.sbar{height:6px;border-radius:3px;background:var(--bg);overflow:hidden}.sfill{height:100%;border-radius:3px;transition:width .5s}
+#pc{position:fixed;inset:0;pointer-events:none;z-index:0}
+@media(max-width:768px){.asb{display:none!important}.asb.open{display:flex!important;position:fixed;inset:0;z-index:90;background:var(--bg)}}
+</style>
+</head>
+<body>
+<canvas id="pc"></canvas>
+<div id="tc" class="fixed top-4 right-4 z-[200] flex flex-col gap-2 max-w-sm"></div>
+<div id="app" class="relative z-10 min-h-screen"></div>
+<script>
+/* ===== DATABASE MANAGER ===== */
+const DB={
+    schema:{
+        users:{label:'Users',icon:'fa-users',cols:[
+            {key:'id',type:'PK',label:'ID'},{key:'name',type:'VARCHAR',label:'Nama'},
+            {key:'email',type:'VARCHAR',label:'Email'},{key:'phone',type:'VARCHAR',label:'No. HP'},
+            {key:'password',type:'VARCHAR',label:'Password'},{key:'role',type:'ENUM',label:'Role'},
+            {key:'refCode',type:'VARCHAR',label:'Kode Ref'},{key:'bankName',type:'VARCHAR',label:'Nama Bank'},
+            {key:'bankAccount',type:'VARCHAR',label:'No. Rekening'},{key:'bankHolder',type:'VARCHAR',label:'Atas Nama'},
+            {key:'balance',type:'INT',label:'Saldo'},{key:'totalEarnings',type:'INT',label:'Total Earned'},
+            {key:'clicks',type:'INT',label:'Klik'},{key:'createdAt',type:'DATETIME',label:'Dibuat'}
+        ]},
+        products:{label:'Products',icon:'fa-box',cols:[
+            {key:'id',type:'PK',label:'ID'},{key:'name',type:'VARCHAR',label:'Nama'},
+            {key:'desc',type:'TEXT',label:'Deskripsi'},{key:'price',type:'INT',label:'Harga'},
+            {key:'commission',type:'INT',label:'Komisi %'},{key:'image',type:'VARCHAR',label:'Gambar'},
+            {key:'link',type:'VARCHAR',label:'Link Afiliasi'},{key:'active',type:'BOOL',label:'Aktif'},
+            {key:'createdAt',type:'DATETIME',label:'Dibuat'}
+        ]},
+        transactions:{label:'Transactions',icon:'fa-receipt',cols:[
+            {key:'id',type:'PK',label:'ID'},{key:'userId',type:'FK→users',label:'User ID'},
+            {key:'productId',type:'FK→products',label:'Product ID'},{key:'amount',type:'INT',label:'Harga'},
+            {key:'commission',type:'INT',label:'Komisi'},{key:'createdAt',type:'DATETIME',label:'Waktu'}
+        ]},
+        withdrawals:{label:'Withdrawals',icon:'fa-wallet',cols:[
+            {key:'id',type:'PK',label:'ID'},{key:'userId',type:'FK→users',label:'User ID'},
+            {key:'amount',type:'INT',label:'Jumlah'},{key:'status',type:'ENUM',label:'Status'},
+            {key:'bankName',type:'VARCHAR',label:'Bank'},{key:'bankAccount',type:'VARCHAR',label:'No. Rek'},
+            {key:'bankHolder',type:'VARCHAR',label:'Atas Nama'},{key:'createdAt',type:'DATETIME',label:'Diajukan'},
+            {key:'processedAt',type:'DATETIME',label:'Diproses'}
+        ]},
+        db_log:{label:'DB Log',icon:'fa-terminal',cols:[
+            {key:'id',type:'PK',label:'ID'},{key:'action',type:'VARCHAR',label:'Aksi'},
+            {key:'table',type:'VARCHAR',label:'Tabel'},{key:'detail',type:'TEXT',label:'Detail'},
+            {key:'createdAt',type:'DATETIME',label:'Waktu'}
+        ]}
+    },
+    _log(a,t,d){const l=this._rg('db_log');l.push({id:uid(),action:a,table:t,detail:d,createdAt:new Date().toISOString()});if(l.length>200)l.splice(0,l.length-200);this._rs('db_log',l)},
+    _rg(k){try{return JSON.parse(localStorage.getItem('cuan_'+k))||[]}catch(e){return[]}},
+    _rs(k,v){localStorage.setItem('cuan_'+k,JSON.stringify(v))},
+    _rgo(k){try{return JSON.parse(localStorage.getItem('cuan_'+k))||{}}catch(e){return{}}},
+    _rso(k,v){localStorage.setItem('cuan_'+k,JSON.stringify(v))},
+    all(t){return this._rg(t)},
+    get(t,id){return this._rg(t).find(r=>r.id===id)||null},
+    where(t,fn){return this._rg(t).filter(fn)},
+    insert(t,r){if(!r.id)r.id=uid();const rows=this._rg(t);rows.push(r);this._rs(t,rows);this._log('INSERT',t,r.name||r.id);return r},
+    update(t,id,d){const rows=this._rg(t);const i=rows.findIndex(r=>r.id===id);if(i<0)return null;rows[i]={...rows[i],...d};this._rs(t,rows);this._log('UPDATE',t,String(id));return rows[i]},
+    del(t,id){this._rs(t,this._rg(t).filter(r=>r.id!==id));this._log('DELETE',t,String(id))},
+    count(t){return this._rg(t).length},
+    cfg(){return this._rgo('settings')},
+    saveCfg(s){this._rso('settings',s);this._log('UPDATE','settings','config')},
+    storageBytes(){let b=0;for(let k in localStorage)if(k.startsWith('cuan_'))b+=localStorage[k].length*2;return b},
+    init(){
+        if(localStorage.getItem('cuan_v3'))return;
+        this._rs('users',[{id:'admin',name:'Admin Owner',email:'admin@cuanbaylos.com',phone:'081234567890',password:'admin123',role:'admin',refCode:'ADMIN',bankName:'-',bankAccount:'-',bankHolder:'-',balance:0,totalEarnings:0,clicks:0,createdAt:new Date().toISOString()}]);
+        this._rs('products',[
+            {id:'p1',name:'Kursus Trading Digital Pro',desc:'Belajar trading dari nol hingga mahir dengan 50+ video materi eksklusif dan mentoring.',price:350000,commission:15,image:'https://picsum.photos/seed/tradingpro/400/280',link:'https://marketplace.example.com/trading-digital-pro',active:true,createdAt:new Date().toISOString()},
+            {id:'p2',name:'Paket Template Bisnis Online',desc:'500+ template Canva untuk bisnis online, Instagram, dan konten media sosial.',price:125000,commission:20,image:'https://picsum.photos/seed/tplbiz/400/280',link:'https://marketplace.example.com/template-bisnis',active:true,createdAt:new Date().toISOString()},
+            {id:'p3',name:'Ebook Rahasia Uang Online',desc:'Panduan lengkap 200 halaman cara menghasilkan uang dari internet untuk pemula.',price:89000,commission:25,image:'https://picsum.photos/seed/ebookuo/400/280',link:'https://marketplace.example.com/ebook-uang-online',active:true,createdAt:new Date().toISOString()},
+            {id:'p4',name:'Akses Tools Marketing Pro',desc:'Suite lengkap tools SEO, analytics, dan email marketing untuk pebisnis online.',price:275000,commission:15,image:'https://picsum.photos/seed/toolsmkt/400/280',link:'https://marketplace.example.com/tools-marketing-pro',active:true,createdAt:new Date().toISOString()},
+            {id:'p5',name:'Video Course Copywriting Master',desc:'Kuasai teknik copywriting yang menjual dengan 30+ modul video praktis.',price:199000,commission:20,image:'https://picsum.photos/seed/copywr/400/280',link:'https://marketplace.example.com/copywriting-master',active:true,createdAt:new Date().toISOString()},
+            {id:'p6',name:'Bot Trading Otomatis AI',desc:'Bot trading berbasis AI dengan win rate tinggi, tinggal pasang dan biarkan bekerja.',price:500000,commission:10,image:'https://picsum.photos/seed/bottrade/400/280',link:'https://marketplace.example.com/bot-trading-ai',active:true,createdAt:new Date().toISOString()},
+            {id:'p7',name:'Masterclass Dropship 2024',desc:'Strategi dropship terbaru dari supplier terpercaya termasuk modul iklan.',price:450000,commission:12,image:'https://picsum.photos/seed/dropship24/400/280',link:'https://marketplace.example.com/masterclass-dropship',active:true,createdAt:new Date().toISOString()},
+            {id:'p8',name:'Paket Desain Grafis Premium',desc:'1000+ asset desain grafis termasuk mockup, ikon, dan ilustrasi premium.',price:150000,commission:18,image:'https://picsum.photos/seed/dsgnpk/400/280',link:'https://marketplace.example.com/desain-grafis-premium',active:true,createdAt:new Date().toISOString()}
+        ]);
+        this._rs('transactions',[]);this._rs('withdrawals',[]);
+        this._rs('db_log',[{id:uid(),action:'INIT',table:'ALL',detail:'Database initialized',createdAt:new Date().toISOString()}]);
+        this._rso('settings',{siteName:'Cuan dengan Baylos',tagline:'Platform Afiliasi Terpercaya #1 Indonesia',accentColor:'#f59e0b'});
+        localStorage.setItem('cuan_v3','1');
+    }
+};
+
+/* ===== STATE ===== */
+let S={user:null,page:'home',aTab:'overview',uTab:'links',pTab:'personal',dbTable:'users',dbSearch:'',modal:null};
+
+/* ===== UTILS ===== */
+function uid(){return Date.now().toString(36)+Math.random().toString(36).substr(2,5)}
+function Rp(n){return'Rp '+Number(n).toLocaleString('id-ID')}
+function rc(n){return n.replace(/[^a-zA-Z]/g,'').toUpperCase().slice(0,4)+Math.random().toString(36).substr(2,4).toUpperCase()}
+function ago(d){const s=Math.floor((Date.now()-new Date(d))/1000);if(s<60)return s+'d';if(s<3600)return Math.floor(s/60)+'m';if(s<86400)return Math.floor(s/3600)+'j';return Math.floor(s/86400)+'h'}
+function esc(s){const d=document.createElement('div');d.textContent=s;return d.innerHTML}
+function fmtB(b){if(b<1024)return b+' B';if(b<1048576)return(b/1024).toFixed(1)+' KB';return(b/1048576).toFixed(2)+' MB'}
+function initials(n){return n.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2)}
+function profComplete(u){let c=3;if(u.phone)c++;if(u.bankName&&u.bankName!=='-')c++;if(u.bankAccount&&u.bankAccount!=='-')c++;if(u.bankHolder&&u.bankHolder!=='-')c++;return Math.round(c/7*100)}
+
+/* ===== TOAST ===== */
+function toast(m,t='success'){
+    const c=document.getElementById('tc');const cl={success:'border-emerald-500/60 bg-emerald-900/30',error:'border-red-500/60 bg-red-900/30',info:'border-amber-500/60 bg-amber-900/30'};
+    const ic={success:'fa-check-circle text-emerald-400',error:'fa-times-circle text-red-400',info:'fa-info-circle text-amber-400'};
+    const el=document.createElement('div');el.className=`toast border-l-4 ${cl[t]} rounded-lg px-4 py-3 flex items-center gap-3`;
+    el.innerHTML=`<i class="fas ${ic[t]}"></i><span class="text-sm">${esc(m)}</span>`;c.appendChild(el);setTimeout(()=>{el.classList.add('toast-out');setTimeout(()=>el.remove(),200)},2800);
+}
+
+/* ===== NAV ===== */
+function go(p,d){S.page=p;if(d)Object.assign(S,d);render();window.scrollTo(0,0)}
+function refreshUser(){if(!S.user)return;const u=DB.get('users',S.user.id);if(u)S.user=u}
+
+/* ===== RENDER ===== */
+function render(){
+    document.getElementById('app').innerHTML=(S.page==='admin'||S.page.startsWith('admin-'))?renderAdmin():renderNav()+`<main>${renderPage()}</main>`;
+    bind();
+}
+
+/* ===== NAVBAR ===== */
+function renderNav(){
+    const u=S.user;
+    let right=u?(u.role==='admin'
+        ?`<a onclick="go('admin')" class="cursor-pointer hover:text-amber-400 transition text-sm font-medium">Admin</a><a onclick="go('home')" class="cursor-pointer hover:text-amber-400 transition text-sm font-medium">Toko</a><button onclick="doLogout()" class="bo bs">Keluar</button>`
+        :`<a onclick="go('home')" class="cursor-pointer hover:text-amber-400 transition text-sm font-medium">Toko</a><a onclick="go('dashboard')" class="cursor-pointer hover:text-amber-400 transition text-sm font-medium">Dashboard</a><a onclick="go('profile')" class="cursor-pointer hover:text-amber-400 transition text-sm font-medium">Profil</a><button onclick="doLogout()" class="bo bs">Keluar</button>`
+    ):`<a onclick="go('home')" class="cursor-pointer hover:text-amber-400 transition text-sm font-medium">Beranda</a><a onclick="go('login')" class="cursor-pointer hover:text-amber-400 transition text-sm font-medium">Masuk</a><button onclick="go('register')" class="bg bs px-5 py-2">Daftar Gratis</button>`;
+    return`<nav class="sticky top-0 z-50 border-b border-[var(--border)] bg-[var(--bg)]/85 backdrop-blur-xl">
+        <div class="max-w-7xl mx-auto px-4 h-14 flex items-center justify-between">
+            <a onclick="go('home')" class="cursor-pointer flex items-center gap-2"><div class="coin w-8 h-8 text-sm">C</div><div class="leading-tight"><div class="font-display font-800 text-sm shim">CUAN</div><div class="text-[8px] text-[var(--muted)] tracking-widest">dengan Baylos</div></div></a>
+            <div class="flex items-center gap-3">${right}</div>
+        </div></nav>`;
+}
+
+function renderPage(){
+    switch(S.page){case'home':return pgHome();case'login':return pgLogin();case'register':return pgRegister();case'dashboard':return pgDash();case'profile':return pgProfile();default:return pgHome()}
+}
+
+/* ===== HOME ===== */
+function pgHome(){
+    const ps=DB.where('products',p=>p.active);
+    const cards=ps.map((p,i)=>{const c=Math.round(p.price*p.commission/100);
+    return`<div class="ch gb rounded-xl overflow-hidden bg-[var(--card)] anim" style="animation-delay:${i*.05}s">
+        <div class="relative h-40 overflow-hidden"><img src="${p.image}" alt="${esc(p.name)}" class="w-full h-full object-cover transition-transform duration-500 hover:scale-110" loading="lazy"><div class="absolute top-2 right-2 bd bd-g"><i class="fas fa-coins mr-1"></i>${p.commission}%</div></div>
+        <div class="p-4"><h3 class="font-display font-600 text-sm mb-1 line-clamp-1">${esc(p.name)}</h3><p class="text-[11px] text-[var(--muted)] mb-3 line-clamp-2">${esc(p.desc)}</p>
+        <div class="flex items-end justify-between mb-3"><div><div class="text-base font-bold text-amber-400">${Rp(p.price)}</div><div class="text-[10px] text-emerald-400">Komisi: ${Rp(c)}</div></div></div>
+        <button onclick="copyAff('${p.id}')" class="w-full bg py-2 rounded-lg text-xs flex items-center justify-center gap-2"><i class="fas fa-link"></i>Salin Link Afiliasi</button></div></div>`}).join('');
+    return`<section class="relative py-16 md:py-24 text-center px-4"><div class="absolute inset-0 bg-gradient-to-b from-amber-500/5 via-transparent to-transparent"></div>
+        <div class="relative max-w-3xl mx-auto">
+            <div class="anim inline-block mb-3 bd bd-g text-[10px]"><i class="fas fa-bolt mr-1"></i>Platform Afiliasi #1</div>
+            <h1 class="anim d1 font-display font-900 text-3xl md:text-5xl leading-tight mb-3"><span class="shim">Cuan</span> <span class="text-white/90">dengan Baylos</span></h1>
+            <p class="anim d2 text-[var(--muted)] text-sm md:text-base mb-7 max-w-lg mx-auto">Daftar gratis, bagikan link produk, dan dapatkan komisi dari setiap penjualan.</p>
+            <div class="anim d3 flex flex-wrap justify-center gap-3">
+                <button onclick="go('register')" class="bg px-7 py-2.5 rounded-xl text-sm" style="animation:pulseG 2s infinite"><i class="fas fa-rocket mr-2"></i>Mulai Sekarang</button>
+                <button onclick="document.getElementById('ps').scrollIntoView({behavior:'smooth'})" class="bo px-7 py-2.5 rounded-xl text-sm"><i class="fas fa-store mr-2"></i>Lihat Produk</button>
+            </div>
+            <div class="anim d4 flex justify-center gap-8 mt-10"><div><div class="text-xl font-bold text-amber-400">${ps.length}+</div><div class="text-[10px] text-[var(--muted)]">Produk</div></div><div><div class="text-xl font-bold text-emerald-400">15%</div><div class="text-[10px] text-[var(--muted)]">Avg Komisi</div></div><div><div class="text-xl font-bold text-amber-400">Gratis</div><div class="text-[10px] text-[var(--muted)]">Daftar</div></div></div>
+        </div></section>
+    <section class="py-12 px-4"><div class="max-w-4xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-3">
+        ${[{i:'fa-user-plus',t:'Daftar',d:'30 detik'},{i:'fa-hand-pointer',t:'Pilih Produk',d:'Katalog terbaik'},{i:'fa-copy',t:'Salin Link',d:'Link unik'},{i:'fa-money-bill-wave',t:'Dapat Komisi',d:'Per penjualan'}].map((s,i)=>`
+        <div class="anim text-center p-4 rounded-xl bg-[var(--card)] gb" style="animation-delay:${i*.07}s"><div class="w-10 h-10 mx-auto mb-2 rounded-lg bg-amber-500/10 flex items-center justify-center text-amber-400"><i class="fas ${s.i}"></i></div><div class="font-display font-600 text-xs">${s.t}</div><div class="text-[10px] text-[var(--muted)]">${s.d}</div></div>`).join('')}
+    </div></section>
+    <section id="ps" class="py-12 px-4"><div class="max-w-7xl mx-auto"><div class="text-center mb-8"><h2 class="font-display font-800 text-xl md:text-2xl mb-2">Katalog Produk</h2><p class="text-[var(--muted)] text-xs">Pilih produk dan bagikan link afiliasi</p></div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">${cards}</div></div></section>
+    <footer class="border-t border-[var(--border)] py-6 px-4 mt-10"><div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-3">
+        <div class="flex items-center gap-2"><div class="coin w-6 h-6 text-[10px]">C</div><span class="font-display font-600 text-xs">Cuan dengan Baylos</span></div>
+        <p class="text-[10px] text-[var(--muted)]">&copy; 2024 — Data tersimpan di localStorage browser</p></div></footer>`;
+}
+
+/* ===== LOGIN ===== */
+function pgLogin(){
+    return`<div class="min-h-[80vh] flex items-center justify-center px-4"><div class="w-full max-w-sm anim">
+        <div class="text-center mb-6"><div class="coin w-12 h-12 text-lg mx-auto mb-2">C</div><h2 class="font-display font-800 text-xl">Masuk</h2><p class="text-xs text-[var(--muted)] mt-1">Kelola afiliasi kamu</p></div>
+        <form id="f-login" class="bg-[var(--card)] gb rounded-xl p-5 space-y-3">
+            <div><label class="lbl">Email</label><input type="email" name="email" class="inp" placeholder="nama@email.com" required></div>
+            <div><label class="lbl">Password</label><input type="password" name="password" class="inp" placeholder="Masukkan password" required></div>
+            <button type="submit" class="w-full bg py-2.5 rounded-xl text-sm mt-1">Masuk</button>
+            <p class="text-center text-[11px] text-[var(--muted)]">Belum punya akun? <a onclick="go('register')" class="text-amber-400 cursor-pointer hover:underline">Daftar</a></p>
+        </form></div></div>`;
+}
+
+/* ===== REGISTER ===== */
+function pgRegister(){
+    return`<div class="min-h-[80vh] flex items-center justify-center px-4"><div class="w-full max-w-sm anim">
+        <div class="text-center mb-6"><div class="coin w-12 h-12 text-lg mx-auto mb-2">C</div><h2 class="font-display font-800 text-xl">Daftar Gratis</h2><p class="text-xs text-[var(--muted)] mt-1">Langsung bisa mulai promosi</p></div>
+        <form id="f-reg" class="bg-[var(--card)] gb rounded-xl p-5 space-y-3">
+            <div><label class="lbl">Nama Lengkap</label><input type="text" name="name" class="inp" placeholder="Nama kamu" required></div>
+            <div><label class="lbl">Email</label><input type="email" name="email" class="inp" placeholder="nama@email.com" required></div>
+            <div><label class="lbl">No. HP <span class="text-[var(--muted)]">(opsional)</span></label><input type="tel" name="phone" class="inp" placeholder="08xxxxxxxxxx"></div>
+            <div><label class="lbl">Password</label><input type="password" name="password" class="inp" placeholder="Min. 6 karakter" minlength="6" required></div>
+            <div><label class="lbl">Konfirmasi Password</label><input type="password" name="password2" class="inp" placeholder="Ulangi password" required></div>
+            <button type="submit" class="w-full bg py-2.5 rounded-xl text-sm mt-1">Daftar Sekarang</button>
+            <p class="text-center text-[11px] text-[var(--muted)]">Sudah punya akun? <a onclick="go('login')" class="text-amber-400 cursor-pointer hover:underline">Masuk</a></p>
+        </form></div></div>`;
+}
+
+/* ===== USER DASHBOARD ===== */
+function pgDash(){
+    refreshUser();const u=S.user;if(!u){go('login');return''}
+    const txns=DB.where('transactions',t=>t.userId===u.id);
+    const prods=DB.where('products',p=>p.active);
+    const totalC=txns.reduce((s,t)=>s+t.commission,0);
+    const pendW=DB.where('withdrawals',w=>w.userId===u.id&&w.status==='pending').reduce((s,w)=>s+w.amount,0);
+    const avail=Math.max(0,u.balance-pendW);
+    const pc=profComplete(u);
+    const tab=S.uTab||'links';
+
+    /* Banner lengkapi profil */
+    let banner='';
+    if(pc<100)banner=`<div class="anim mb-5 bg-amber-500/8 border border-amber-500/15 rounded-xl p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+        <div class="flex items-center gap-3"><div class="w-10 h-10 rounded-full bg-amber-500/15 flex items-center justify-center text-amber-400"><i class="fas fa-exclamation-triangle"></i></div>
+        <div><div class="text-xs font-600 text-amber-400">Profil belum lengkap (${pc}%)</div><div class="text-[10px] text-[var(--muted)]">Lengkapi data rekening untuk bisa menarik dana</div>
+        <div class="sbar w-32 mt-1"><div class="sfill bg-amber-500" style="--w:${pc}%"></div></div></div></div>
+        <button onclick="go('profile')" class="bo bs whitespace-nowrap"><i class="fas fa-pen mr-1"></i>Lengkapi</button></div>`;
+
+    /* Withdraw banner */
+    let wBanner='';
+    if(avail>=100000&&(u.bankName&&u.bankName!=='-'&&u.bankAccount&&u.bankAccount!=='-'&&u.bankHolder&&u.bankHolder!=='-'))
+        wBanner=`<div class="anim d1 mb-5 bg-emerald-500/8 border border-emerald-500/15 rounded-xl p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+            <div><div class="text-xs font-600 text-emerald-400"><i class="fas fa-check-circle mr-1"></i>Saldo memenuhi syarat tarik</div>
+            <div class="text-[10px] text-[var(--muted)]">Min. ${Rp(100000)} — ke ${u.bankName} ${u.bankAccount}</div></div>
+            <button onclick="reqWithdraw()" class="bg bs px-4 py-2 whitespace-nowrap"><i class="fas fa-arrow-down mr-1"></i>Tarik ${Rp(avail)}</button></div>`;
+    else if(avail>=100000)wBanner=`<div class="anim d1 mb-5 bg-amber-500/8 border border-amber-500/15 rounded-xl p-4 text-xs text-amber-400"><i class="fas fa-info-circle mr-1"></i>Saldo cukup tapi data rekening belum lengkap. <a onclick="go('profile')" class="underline cursor-pointer">Lengkapi profil</a></div>`;
+    else if(avail>0)wBanner=`<div class="anim d1 mb-5 bg-[var(--card)] gb rounded-xl p-4 text-xs text-[var(--muted)]"><i class="fas fa-info-circle mr-1 text-amber-400"></i>Perlu ${Rp(100000-avail)} lagi untuk tarik dana (min. ${Rp(100000)})</div>`;
+
+    /* Tab content */
+    let tabContent='';
+    if(tab==='links'){
+        const rows=prods.map(p=>{const link=`https://cuandenganbaylos.com/go/${p.id}?ref=${u.refCode}`;
+            const mt=txns.filter(t=>t.productId===p.id);const mc=mt.reduce((s,t)=>s+t.commission,0);
+            return`<tr><td><div class="flex items-center gap-2"><img src="${p.image}" class="w-8 h-8 rounded object-cover"><span class="text-xs">${esc(p.name)}</span></div></td>
+            <td class="text-xs text-amber-400">${Rp(p.price)}</td><td><span class="bd bd-g">${p.commission}%</span></td>
+            <td class="text-xs text-emerald-400">${Rp(mc)}</td><td class="text-xs">${mt.length}</td>
+            <td><button onclick="cpLink('${link}')" class="bo bs"><i class="fas fa-copy mr-1"></i>Salin</button></td></tr>`}).join('');
+        tabContent=`<div class="bg-[var(--card)] gb rounded-xl overflow-hidden"><div class="overflow-x-auto"><table><thead><tr><th>Produk</th><th>Harga</th><th>Komisi</th><th>Earned</th><th>Sales</th><th></th></tr></thead><tbody>${rows}</tbody></table></div></div>`;
+    }else{
+        const rows=txns.length?txns.slice().reverse().map(t=>{const p=DB.get('products',t.productId);
+            return`<tr><td class="text-xs">${p?esc(p.name):'—'}</td><td class="text-xs text-amber-400">${Rp(t.amount)}</td><td class="text-xs text-emerald-400">+${Rp(t.commission)}</td><td class="text-[10px] text-[var(--muted)]">${ago(t.createdAt)}</td></tr>`}).join('')
+            :`<tr><td colspan="4" class="text-center text-[var(--muted)] py-8 text-xs">Belum ada transaksi</td></tr>`;
+        tabContent=`<div class="bg-[var(--card)] gb rounded-xl overflow-hidden"><div class="overflow-x-auto"><table><thead><tr><th>Produk</th><th>Harga</th><th>Komisi</th><th>Waktu</th></tr></thead><tbody>${rows}</tbody></table></div></div>`;
+    }
+
+    return`<div class="max-w-7xl mx-auto px-4 py-6">
+        <div class="flex items-center justify-between mb-5 anim"><div><h1 class="font-display font-800 text-xl">Dashboard</h1><p class="text-xs text-[var(--muted)]">Selamat datang, ${esc(u.name)}</p></div>
+        <div class="flex items-center gap-2"><div class="avatar-sm avatar">${initials(u.name)}</div></div></div>
+        ${banner}${wBanner}
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-5">
+            <div class="anim d1 bg-[var(--card)] gb rounded-xl p-4"><div class="text-[10px] text-[var(--muted)] mb-0.5"><i class="fas fa-wallet mr-1"></i>Saldo</div><div class="text-lg font-bold text-amber-400">${Rp(avail)}</div></div>
+            <div class="anim d2 bg-[var(--card)] gb rounded-xl p-4"><div class="text-[10px] text-[var(--muted)] mb-0.5"><i class="fas fa-chart-line mr-1"></i>Total Komisi</div><div class="text-lg font-bold text-emerald-400">${Rp(totalC)}</div></div>
+            <div class="anim d3 bg-[var(--card)] gb rounded-xl p-4"><div class="text-[10px] text-[var(--muted)] mb-0.5"><i class="fas fa-shopping-cart mr-1"></i>Penjualan</div><div class="text-lg font-bold">${txns.length}</div></div>
+            <div class="anim d4 bg-[var(--card)] gb rounded-xl p-4"><div class="text-[10px] text-[var(--muted)] mb-0.5"><i class="fas fa-link mr-1"></i>Kode Ref</div><div class="text-lg font-bold text-amber-300">${u.refCode}</div></div>
+        </div>
+        <div class="flex gap-0 border-b border-[var(--border)] mb-4">
+            <div class="ptab ${tab==='links'?'act':''}" onclick="S.uTab='links';render()"><i class="fas fa-link mr-1"></i>Link Afiliasi</div>
+            <div class="ptab ${tab==='history'?'act':''}" onclick="S.uTab='history';render()"><i class="fas fa-history mr-1"></i>Riwayat</div>
+        </div>
+        ${tabContent}
+    </div>`;
+}
+
+/* ===== USER PROFILE ===== */
+function pgProfile(){
+    refreshUser();const u=S.user;if(!u){go('login');return''}
+    const tab=S.pTab||'personal';
+    const pc=profComplete(u);
+    let content='';
+
+    if(tab==='personal'){
+        content=`<form id="f-profile" class="space-y-4">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div><label class="lbl">Nama Lengkap</label><input type="text" name="name" class="inp" value="${esc(u.name)}" required></div>
+                <div><label class="lbl">Email</label><input type="email" name="email" class="inp" value="${esc(u.email)}" required></div>
+            </div>
+            <div class="max-w-sm"><label class="lbl">No. HP</label><input type="tel" name="phone" class="inp" value="${esc(u.phone||'')}" placeholder="08xxxxxxxxxx"></div>
+            <button type="submit" class="bg bs px-6 py-2.5"><i class="fas fa-save mr-1"></i>Simpan</button>
+        </form>`;
+    }else if(tab==='bank'){
+        content=`<div class="bg-amber-500/5 border border-amber-500/10 rounded-xl p-4 mb-4 text-xs text-amber-400"><i class="fas fa-shield-halved mr-1"></i>Data rekening hanya digunakan untuk proses penarikan dana. Tidak ditampilkan ke publik.</div>
+        <form id="f-bank" class="space-y-4">
+            <div><label class="lbl">Nama Bank</label><select name="bankName" class="inp" required>
+                <option value="-" ${u.bankName==='-'?'selected':''}>— Pilih Bank —</option>
+                ${['BCA','BNI','BRI','Mandiri','BSI','CIMB','Danamon','Permata','BTPN','Maybank','OCBC','Panin','BTN','SeaBank','ShopeePay','GoPay','DANA','OVO','Bank Lainnya'].map(b=>`<option value="${b}" ${u.bankName===b?'selected':''}>${b}</option>`).join('')}
+            </select></div>
+            <div class="max-w-sm"><label class="lbl">Nomor Rekening</label><input type="text" name="bankAccount" class="inp" value="${esc(u.bankAccount&&u.bankAccount!=='-'?u.bankAccount:'')}" placeholder="Masukkan nomor rekening" required></div>
+            <div class="max-w-sm"><label class="lbl">Atas Nama</label><input type="text" name="bankHolder" class="inp" value="${esc(u.bankHolder&&u.bankHolder!=='-'?u.bankHolder:'')}" placeholder="Nama sesuai buku rekening" required></div>
+            <button type="submit" class="bg bs px-6 py-2.5"><i class="fas fa-save mr-1"></i>Simpan Rekening</button>
+        </form>`;
+    }else if(tab==='security'){
+        content=`<form id="f-pass" class="space-y-4 max-w-sm">
+            <div><label class="lbl">Password Lama</label><input type="password" name="oldpass" class="inp" placeholder="Masukkan password lama" required></div>
+            <div><label class="lbl">Password Baru</label><input type="password" name="newpass" class="inp" placeholder="Min. 6 karakter" minlength="6" required></div>
+            <div><label class="lbl">Konfirmasi Password Baru</label><input type="password" name="newpass2" class="inp" placeholder="Ulangi password baru" required></div>
+            <button type="submit" class="bg bs px-6 py-2.5"><i class="fas fa-lock mr-1"></i>Ubah Password</button>
+        </form>`;
+    }else{
+        content=`<div class="space-y-4">
+            <div class="bg-[var(--card)] gb rounded-xl p-5"><div class="text-[10px] text-[var(--muted)] mb-1">Kode Referral</div><div class="text-2xl font-bold text-amber-400 font-display">${u.refCode}</div>
+            <div class="text-[11px] text-[var(--muted)] mt-1">Bagikan kode ini ke teman untuk mendaftar</div></div>
+            <div class="bg-[var(--card)] gb rounded-xl p-5"><div class="text-[10px] text-[var(--muted)] mb-1">Link Referral</div>
+            <div class="flex items-center gap-2 mt-1"><input type="text" readonly class="inp text-xs" value="https://cuandenganbaylos.com/?ref=${u.refCode}"><button onclick="cpLink('https://cuandenganbaylos.com/?ref=${u.refCode}')" class="bo bs whitespace-nowrap"><i class="fas fa-copy"></i></button></div></div>
+            <div class="grid grid-cols-2 gap-3">
+                <div class="bg-[var(--card)] gb rounded-xl p-4"><div class="text-[10px] text-[var(--muted)]">Total Klik Link</div><div class="text-lg font-bold mt-1">${u.clicks||0}</div></div>
+                <div class="bg-[var(--card)] gb rounded-xl p-4"><div class="text-[10px] text-[var(--muted)]">Total Penjualan</div><div class="text-lg font-bold mt-1">${DB.where('transactions',t=>t.userId===u.id).length}</div></div>
+                <div class="bg-[var(--card)] gb rounded-xl p-4"><div class="text-[10px] text-[var(--muted)]">Total Komisi</div><div class="text-lg font-bold text-emerald-400 mt-1">${Rp(u.totalEarnings||0)}</div></div>
+                <div class="bg-[var(--card)] gb rounded-xl p-4"><div class="text-[10px] text-[var(--muted)]">Bergabung</div><div class="text-lg font-bold mt-1">${new Date(u.createdAt).toLocaleDateString('id-ID')}</div></div>
+            </div>
+        </div>`;
+    }
+
+    return`<div class="max-w-3xl mx-auto px-4 py-6">
+        <div class="flex items-center gap-4 mb-6 anim">
+            <div class="avatar-lg avatar">${initials(u.name)}</div>
+            <div><h1 class="font-display font-800 text-xl">${esc(u.name)}</h1><p class="text-xs text-[var(--muted)]">${esc(u.email)}</p>
+            <div class="flex items-center gap-2 mt-1"><div class="sbar w-20"><div class="sfill ${pc===100?'bg-emerald-500':'bg-amber-500'}" style="--w:${pc}%"></div></div><span class="text-[10px] ${pc===100?'text-emerald-400':'text-amber-400'}">${pc}%</span></div></div>
+        </div>
+        <div class="flex gap-0 border-b border-[var(--border)] mb-5 overflow-x-auto">
+            <div class="ptab ${tab==='personal'?'act':''}" onclick="S.pTab='personal';render()">Pribadi</div>
+            <div class="ptab ${tab==='bank'?'act':''}" onclick="S.pTab='bank';render()">Rekening Bank</div>
+            <div class="ptab ${tab==='security'?'act':''}" onclick="S.pTab='security';render()">Keamanan</div>
+            <div class="ptab ${tab==='referral'?'act':''}" onclick="S.pTab='referral';render()">Referral</div>
+        </div>
+        <div class="anim d1">${content}</div>
+    </div>`;
+}
+
+/* ===== ADMIN PANEL ===== */
+function renderAdmin(){
+    if(!S.user||S.user.role!=='admin'){go('login');return''}
+    const tab=S.aTab||'overview';
+    const tabs=[
+        {id:'overview',icon:'fa-chart-pie',label:'Overview'},
+        {id:'products',icon:'fa-box',label:'Produk'},
+        {id:'users',icon:'fa-users',label:'User'},
+        {id:'transactions',icon:'fa-receipt',label:'Transaksi'},
+        {id:'withdrawals',icon:'fa-wallet',label:'Penarikan'},
+        {id:'sales',icon:'fa-cart-plus',label:'Catat Sales'},
+        {id:'database',icon:'fa-database',label:'Database'},
+        {id:'settings',icon:'fa-cog',label:'Pengaturan'}
+    ];
+    const sb=tabs.map(t=>`<div class="sl ${tab===t.id?'act':''}" onclick="S.aTab='${t.id}';render()"><i class="fas ${t.icon} w-4 text-center text-xs"></i><span>${t.label}</span></div>`).join('');
+    let c='';
+    switch(tab){
+        case'overview':c=adOverview();break;case'products':c=adProducts();break;case'users':c=adUsers();break;
+        case'transactions':c=adTxns();break;case'withdrawals':c=adWds();break;case'sales':c=adSales();break;
+        case'database':c=adDb();break;case'settings':c=adSettings();break;
+    }
+    return`<div class="flex min-h-screen">
+        <aside class="asb w-56 bg-[var(--card)] border-r border-[var(--border)] p-3 flex flex-col gap-0.5 flex-shrink-0 overflow-y-auto">
+            <div class="flex items-center gap-2 mb-5 px-2 pt-1"><div class="coin w-7 h-7 text-xs">C</div><div><div class="font-display font-800 text-[11px]">Admin Panel</div><div class="text-[8px] text-[var(--muted)]">Owner</div></div></div>
+            ${sb}
+            <div class="mt-auto pt-3 border-t border-[var(--border)]"><div class="sl" onclick="go('home')"><i class="fas fa-store w-4 text-center text-xs"></i><span>Lihat Toko</span></div><div class="sl" onclick="doLogout()"><i class="fas fa-sign-out-alt w-4 text-center text-xs"></i><span>Keluar</span></div></div>
+        </aside>
+        <button onclick="document.querySelector('.asb').classList.toggle('open')" class="md:hidden fixed top-3 left-3 z-[95] w-9 h-9 rounded-lg bg-[var(--card)] border border-[var(--border)] flex items-center justify-center text-[var(--muted)] text-sm"><i class="fas fa-bars"></i></button>
+        <div class="flex-1 p-4 md:p-6 overflow-x-auto">${c}</div></div>${S.modal||''}`;
+}
+
+/* Admin Overview */
+function adOverview(){
+    const us=DB.where('users',u=>u.role!=='admin');const ps=DB.all('products');const tx=DB.all('transactions');
+    const wd=DB.where('withdrawals',w=>w.status==='pending');
+    const rev=tx.reduce((s,t)=>s+t.amount,0);const com=tx.reduce((s,t)=>s+t.commission,0);
+    return`<div class="anim">
+        <h1 class="font-display font-800 text-xl mb-5">Dashboard Overview</h1>
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-6">
+            <div class="bg-[var(--card)] gb rounded-xl p-4"><div class="text-[10px] text-[var(--muted)] mb-0.5"><i class="fas fa-users mr-1"></i>Total User</div><div class="text-2xl font-bold">${us.length}</div></div>
+            <div class="bg-[var(--card)] gb rounded-xl p-4"><div class="text-[10px] text-[var(--muted)] mb-0.5"><i class="fas fa-box mr-1"></i>Produk Aktif</div><div class="text-2xl font-bold">${ps.filter(p=>p.active).length}/${ps.length}</div></div>
+            <div class="bg-[var(--card)] gb rounded-xl p-4"><div class="text-[10px] text-[var(--muted)] mb-0.5"><i class="fas fa-receipt mr-1"></i>Transaksi</div><div class="text-2xl font-bold">${tx.length}</div><div class="text-[10px] text-amber-400">${Rp(rev)}</div></div>
+            <div class="bg-[var(--card)] gb rounded-xl p-4"><div class="text-[10px] text-[var(--muted)] mb-0.5"><i class="fas fa-wallet mr-1"></i>Penarikan Pending</div><div class="text-2xl font-bold text-amber-400">${wd.length}</div></div>
+        </div>
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-3">
+            <div class="bg-[var(--card)] gb rounded-xl p-4"><h3 class="text-xs font-700 mb-3"><i class="fas fa-coins mr-1 text-amber-400"></i>Revenue & Komisi</h3>
+                <div class="flex gap-4"><div><div class="text-[10px] text-[var(--muted)]">Total Revenue</div><div class="text-lg font-bold text-amber-400">${Rp(rev)}</div></div>
+                <div><div class="text-[10px] text-[var(--muted)]">Total Komisi Dibagikan</div><div class="text-lg font-bold text-emerald-400">${Rp(com)}</div></div></div></div>
+            <div class="bg-[var(--card)] gb rounded-xl p-4"><h3 class="text-xs font-700 mb-3"><i class="fas fa-hard-drive mr-1 text-amber-400"></i>Storage</h3>
+                <div class="flex justify-between text-[10px] text-[var(--muted)] mb-1"><span>${fmtB(DB.storageBytes())}</span><span>5 MB</span></div>
+                <div class="sbar"><div class="sfill bg-gradient-to-r from-amber-500 to-emerald-500" style="--w:${Math.min(100,DB.storageBytes()/5242880*100)}%"></div></div></div>
+        </div>
+    </div>`;
+}
+
+/* Admin Products */
+function adProducts(){
+    const ps=DB.all('products');
+    const rows=ps.map(p=>`<tr>
+        <td><div class="flex items-center gap-2"><img src="${p.image}" class="w-9 h-9 rounded-lg object-cover"><div><div class="text-xs font-medium">${esc(p.name)}</div><div class="text-[9px] text-[var(--muted)]">${p.id}</div></div></div></td>
+        <td class="text-xs text-amber-400">${Rp(p.price)}</td>
+        <td><span class="bd bd-g">${p.commission}% = ${Rp(Math.round(p.price*p.commission/100))}</span></td>
+        <td><span class="bd ${p.active?'bd-e':'bd-r'}">${p.active?'Aktif':'Nonaktif'}</span></td>
+        <td><div class="flex gap-1"><button onclick="editProd('${p.id}')" class="bo bs text-[10px]"><i class="fas fa-pen mr-1"></i>Edit</button><button onclick="delProd('${p.id}')" class="border border-red-500/30 text-red-400 bg-0 bs text-[10px] hover:bg-red-500/10 transition cursor-pointer"><i class="fas fa-trash"></i></button></div></td>
+    </tr>`).join('');
+    return`<div class="anim">
+        <div class="flex items-center justify-between mb-5"><div><h1 class="font-display font-800 text-xl">Kelola Produk</h1><p class="text-[10px] text-[var(--muted)]">Tabel: cuan_products — ${ps.length} rows</p></div>
+        <button onclick="addProd()" class="bg bs px-4 py-2"><i class="fas fa-plus mr-1"></i>Tambah Produk</button></div>
+        <div class="bg-[var(--card)] gb rounded-xl overflow-hidden"><div class="overflow-x-auto"><table><thead><tr><th>Produk</th><th>Harga</th><th>Komisi</th><th>Status</th><th>Aksi</th></tr></thead><tbody>${rows}</tbody></table></div></div>
+    </div>`;
+}
+
+/* Admin Users */
+function adUsers(){
+    const us=DB.where('users',u=>u.role!=='admin');
+    const rows=us.map(u=>{const tc=DB.where('transactions',t=>t.userId===u.id).reduce((s,t)=>s+t.commission,0);
+        const hasBank=u.bankName&&u.bankName!=='-';
+        return`<tr>
+            <td><div class="flex items-center gap-2"><div class="avatar-sm avatar">${initials(u.name)}</div><div><div class="text-xs font-medium">${esc(u.name)}</div><div class="text-[9px] text-[var(--muted)]">${esc(u.email)}</div></div></div></td>
+            <td class="text-xs">${esc(u.phone||'-')}</td>
+            <td><span class="bd bd-g">${u.refCode}</span></td>
+            <td>${hasBank?`<div class="text-[10px]"><div class="text-amber-400">${esc(u.bankName)}</div><div class="text-[var(--muted)]">${esc(u.bankAccount)}</div></div>`:'<span class="text-[10px] text-[var(--muted)]">Belum diisi</span>'}</td>
+            <td class="text-xs text-amber-400">${Rp(u.balance)}</td>
+            <td class="text-xs text-emerald-400">${Rp(tc)}</td>
+            <td><button onclick="viewUser('${u.id}')" class="bo bs text-[10px]"><i class="fas fa-eye mr-1"></i>Detail</button></td>
+        </tr>`}).join('');
+    return`<div class="anim">
+        <div class="mb-5"><h1 class="font-display font-800 text-xl">Database User</h1><p class="text-[10px] text-[var(--muted)]">Tabel: cuan_users — ${us.length} rows</p></div>
+        <div class="bg-[var(--card)] gb rounded-xl overflow-hidden"><div class="overflow-x-auto"><table><thead><tr><th>User</th><th>HP</th><th>Ref</th><th>Rekening</th><th>Saldo</th><th>Komisi</th><th></th></tr></thead><tbody>${rows||'<tr><td colspan="7" class="text-center text-[var(--muted)] py-8 text-xs">Kosong</td></tr>'}</tbody></table></div></div>
+    </div>`;
+}
+
+/* Admin Transactions */
+function adTxns(){
+    const tx=DB.all('transactions');
+    const rows=tx.slice().reverse().map(t=>{const u=DB.get('users',t.userId);const p=DB.get('products',t.productId);
+        return`<tr><td class="text-[10px] text-[var(--muted)] font-mono">${t.id.slice(0,8)}</td>
+        <td class="text-xs">${u?esc(u.name):'—'}</td><td class="text-xs">${p?esc(p.name):'—'}</td>
+        <td class="text-xs text-amber-400">${Rp(t.amount)}</td><td class="text-xs text-emerald-400">${Rp(t.commission)}</td>
+        <td class="text-[10px] text-[var(--muted)]">${ago(t.createdAt)}</td></tr>`}).join('');
+    return`<div class="anim">
+        <div class="mb-5"><h1 class="font-display font-800 text-xl">Transaksi</h1><p class="text-[10px] text-[var(--muted)]">Tabel: cuan_transactions — ${tx.length} rows</p></div>
+        <div class="bg-[var(--card)] gb rounded-xl overflow-hidden"><div class="overflow-x-auto"><table><thead><tr><th>ID</th><th>User</th><th>Produk</th><th>Harga</th><th>Komisi</th><th>Waktu</th></tr></thead><tbody>${rows||'<tr><td colspan="6" class="text-center text-[var(--muted)] py-8 text-xs">Kosong</td></tr>'}</tbody></table></div></div>
+    </div>`;
+}
+
+/* Admin Withdrawals — dengan detail rekening */
+function adWds(){
+    const wds=DB.all('withdrawals');
+    const rows=wds.slice().reverse().map(w=>{const u=DB.get('users',w.userId);
+        const sb=w.status==='pending'?'bd-g':w.status==='paid'?'bd-e':'bd-r';
+        const st=w.status==='pending'?'Menunggu':w.status==='paid'?'Dibayar':'Ditolak';
+        return`<tr>
+            <td class="text-xs font-medium">${u?esc(u.name):'—'}</td>
+            <td class="text-xs text-amber-400">${Rp(w.amount)}</td>
+            <td><span class="bd ${sb}">${st}</span></td>
+            <td><div class="text-[10px]"><div class="text-amber-300">${esc(w.bankName||'-')}</div><div class="text-[var(--muted)]">${esc(w.bankAccount||'-')} a/n ${esc(w.bankHolder||'-')}</div></div></td>
+            <td class="text-[10px] text-[var(--muted)]">${ago(w.createdAt)}</td>
+            <td>${w.status==='pending'?`<div class="flex gap-1"><button onclick="procWd('${w.id}','paid')" class="border border-emerald-500/30 text-emerald-400 bg-0 bs text-[10px] hover:bg-emerald-500/10 transition cursor-pointer">Bayar</button><button onclick="procWd('${w.id}','rejected')" class="border border-red-500/30 text-red-400 bg-0 bs text-[10px] hover:bg-red-500/10 transition cursor-pointer">Tolak</button></div>`:'—'}</td>
+        </tr>`}).join('');
+    return`<div class="anim">
+        <div class="mb-5"><h1 class="font-display font-800 text-xl">Penarikan Dana</h1><p class="text-[10px] text-[var(--muted)]">Tabel: cuan_withdrawals — ${wds.filter(w=>w.status==='pending').length} pending</p></div>
+        <div class="bg-[var(--card)] gb rounded-xl overflow-hidden"><div class="overflow-x-auto"><table><thead><tr><th>User</th><th>Jumlah</th><th>Status</th><th>Rekening Tujuan</th><th>Waktu</th><th>Aksi</th></tr></thead><tbody>${rows||'<tr><td colspan="6" class="text-center text-[var(--muted)] py-8 text-xs">Kosong</td></tr>'}</tbody></table></div></div>
+    </div>`;
+}
+
+/* Admin Catat Sales */
+function adSales(){
+    const us=DB.where('users',u=>u.role!=='admin');const ps=DB.where('products',p=>p.active);
+    const oU=us.map(u=>`<option value="${u.id}">${esc(u.name)} (${u.refCode})</option>`).join('');
+    const oP=ps.map(p=>`<option value="${p.id}">${esc(p.name)} — ${Rp(p.price)} [${p.commission}%]</option>`).join('');
+    return`<div class="anim max-w-lg">
+        <div class="mb-5"><h1 class="font-display font-800 text-xl">Catat Penjualan</h1>
+        <p class="text-[10px] text-[var(--muted)]">INSERT ke cuan_transactions, UPDATE saldo di cuan_users</p></div>
+        <form id="f-sale" class="bg-[var(--card)] gb rounded-xl p-5 space-y-4">
+            <div><label class="lbl">Affiliator</label><select name="userId" class="inp" required><option value="">Pilih user...</option>${oU}</select></div>
+            <div><label class="lbl">Produk</label><select name="productId" class="inp" required><option value="">Pilih produk...</option>${oP}</select></div>
+            <div id="sale-pv" class="hidden bg-amber-500/5 border border-amber-500/10 rounded-lg p-3 text-xs"></div>
+            <button type="submit" class="w-full bg py-2.5 rounded-xl text-sm"><i class="fas fa-check mr-1"></i>Catat Penjualan</button>
+        </form></div>`;
+}
+
+/* Admin Database */
+function adDb(){
+    const tks=Object.keys(DB.schema);const su=DB.storageBytes();const mx=5242880;const pct=Math.min(100,su/mx*100);
+    const totalR=tks.reduce((s,t)=>s+DB.count(t),0);
+    const vt=S.dbTable||'users';const sch=DB.schema[vt];const rows=DB.getAll(vt);
+    const srch=S.dbSearch.toLowerCase();const filt=srch?rows.filter(r=>JSON.stringify(r).toLowerCase().includes(srch)):rows;
+    const schR=sch.cols.map(c=>`<tr><td class="text-xs font-mono text-amber-400">${c.key}</td><td><span class="bd bd-b text-[9px]">${c.type}</span></td><td class="text-xs">${c.label}</td></tr>`).join('');
+    const dR=filt.slice(0,50).map((r,i)=>`<tr><td class="text-[10px] text-[var(--muted)]">${i+1}</td>${sch.cols.map(c=>{let v=r[c.key]||'—';if(typeof v==='boolean')v=v?'<span class="bd bd-e text-[9px]">true</span>':'<span class="bd bd-r text-[9px]">false</span>';else if(typeof v==='number')v=`<span class="text-amber-300">${v.toLocaleString('id-ID')}</span>`;else if(c.type==='DATETIME'&&v!=='—')v=`<span class="text-[10px] text-[var(--muted)]">${ago(v)}</span>`;else v=`<span class="text-[11px] max-w-[160px] inline-block overflow-hidden text-ellipsis whitespace-nowrap" title="${esc(String(v))}">${esc(String(v))}</span>`;return`<td>${v}</td>`}).join('')}</tr>`).join('');
+    const logs=DB.getAll('db_log').slice(-15).reverse().map(l=>`<tr><td><span class="bd ${l.action==='INSERT'?'bd-e':l.action==='DELETE'?'bd-r':'bd-g'} text-[9px]">${l.action}</span></td><td class="text-xs">${l.table}</td><td class="text-[11px] max-w-[200px] inline-block overflow-hidden text-ellipsis whitespace-nowrap">${esc(l.detail)}</td><td class="text-[10px] text-[var(--muted)]">${ago(l.createdAt)}</td></tr>`).join('');
+    return`<div class="anim">
+        <div class="mb-5"><h1 class="font-display font-800 text-xl">Database Manager</h1><p class="text-[10px] text-[var(--muted)]">Semua data di <code class="text-amber-400 bg-amber-400/10 px-1 py-0.5 rounded">localStorage</code> browser ini</p></div>
+        <div class="bg-[var(--card)] gb rounded-xl p-4 mb-4">
+            <div class="flex justify-between text-xs mb-1"><span class="text-[var(--muted)]"><i class="fas fa-hard-drive mr-1 text-amber-400"></i>Storage</span><span class="text-[var(--muted)]">${fmtB(su)} / ${fmtB(mx)}</span></div>
+            <div class="sbar"><div class="sfill bg-gradient-to-r from-amber-500 to-emerald-500" style="--w:${pct}%"></div></div>
+            <div class="flex justify-between mt-1 text-[10px] text-[var(--muted)]"><span>${tks.length} tabel</span><span>${totalR} records</span></div>
+        </div>
+        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2 mb-4">
+            ${tks.map(t=>{const s=DB.schema[t];const c=DB.count(t);return`<div onclick="S.dbTable='${t}';S.dbSearch='';render()" class="bg-[var(--card2)] border border-[var(--border)] rounded-lg p-3 cursor-pointer transition hover:border-amber-500/30 ${vt===t?'border-amber-500/50':''}">
+                <div class="flex items-center gap-1.5 mb-1"><i class="fas ${s.icon} text-amber-400 text-[10px]"></i><span class="text-[11px] font-600">${s.label}</span></div>
+                <div class="text-lg font-bold">${c}</div><div class="text-[9px] text-[var(--muted)]">${s.cols.length} kolom</div></div>`}).join('')}
+        </div>
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-4">
+            <div class="bg-[var(--card)] gb rounded-xl p-4 overflow-x-auto"><h3 class="text-[11px] font-700 mb-2"><i class="fas fa-sitemap text-amber-400 mr-1"></i>Schema: ${sch.label}</h3><table><thead><tr><th>Kolom</th><th>Tipe</th><th>Label</th></tr></thead><tbody>${schR}</tbody></table></div>
+            <div class="lg:col-span-2 bg-[var(--card)] gb rounded-xl p-4 overflow-hidden">
+                <div class="flex items-center justify-between mb-2 gap-2 flex-wrap"><h3 class="text-[11px] font-700"><i class="fas fa-table text-amber-400 mr-1"></i>${sch.label} <span class="bd bd-g text-[9px]">${filt.length}</span></h3>
+                <div class="flex gap-2"><input type="text" id="db-s" class="inp text-xs" style="width:140px" placeholder="Cari..." value="${esc(S.dbSearch)}" oninput="S.dbSearch=this.value;render()"><button onclick="expTbl('${vt}')" class="bo bs text-[10px]"><i class="fas fa-download mr-1"></i>Export</button></div></div>
+                <div class="overflow-auto" style="max-height:300px"><table><thead><tr><th>#</th>${sch.cols.map(c=>`<th class="text-[9px]">${c.label}</th>`).join('')}</tr></thead><tbody>${dR||`<tr><td colspan="${sch.cols.length+1}" class="text-center text-[var(--muted)] py-6 text-xs">Kosong</td></tr>`}</tbody></table></div>
+            </div></div>
+        <div class="bg-[var(--card)] gb rounded-xl p-4 mb-4 overflow-hidden"><div class="flex items-center justify-between mb-2"><h3 class="text-[11px] font-700"><i class="fas fa-terminal text-amber-400 mr-1"></i>Activity Log</h3><button onclick="DB._rs('db_log',[]);DB._log('DELETE','db_log','cleared');toast('Log dibersihkan','info');render()" class="bo bs text-[10px]"><i class="fas fa-trash mr-1"></i>Clear</button></div>
+        <div class="overflow-auto" style="max-height:200px"><table><thead><tr><th>Aksi</th><th>Tabel</th><th>Detail</th><th>Waktu</th></tr></thead><tbody>${logs||'<tr><td colspan="4" class="text-center text-[var(--muted)] py-4 text-xs">Kosong</td></tr>'}</tbody></table></div></div>
+        <div class="bg-[var(--card)] gb rounded-xl p-4"><h3 class="text-[11px] font-700 mb-3"><i class="fas fa-exchange-alt text-amber-400 mr-1"></i>Backup & Restore</h3>
+        <div class="flex flex-wrap gap-2">
+            <button onclick="expAll()" class="bg bs text-[11px]"><i class="fas fa-download mr-1"></i>Export Semua (JSON)</button>
+            <label class="bo bs text-[11px] cursor-pointer"><i class="fas fa-upload mr-1"></i>Import (JSON)<input type="file" accept=".json" onchange="impAll(event)" class="hidden"></label>
+            <button onclick="if(confirm('HAPUS SEMUA DATA?')){localStorage.clear();location.reload()}" class="border border-red-500/30 text-red-400 bg-0 bs text-[11px] hover:bg-red-500/10 transition cursor-pointer"><i class="fas fa-exclamation-triangle mr-1"></i>Reset DB</button>
+        </div></div>
+    </div>`;
+}
+
+/* Admin Settings */
+function adSettings(){
+    const s=DB.cfg();const cols=[{v:'#f59e0b',l:'Emas'},{v:'#10b981',l:'Hijau'},{v:'#ef4444',l:'Merah'},{v:'#f97316',l:'Oranye'},{v:'#ec4899',l:'Pink'},{v:'#06b6d4',l:'Cyan'}];
+    const cbs=cols.map(c=>`<button onclick="setAcc('${c.v}')" class="w-9 h-9 rounded-lg border-2 transition hover:scale-110 ${s.accentColor===c.v?'border-white scale-110':'border-transparent'}" style="background:${c.v}"></button>`).join('');
+    return`<div class="anim max-w-lg">
+        <div class="mb-5"><h1 class="font-display font-800 text-xl">Pengaturan Website</h1><p class="text-[10px] text-[var(--muted)]">Tabel: cuan_settings</p></div>
+        <form id="f-cfg" class="bg-[var(--card)] gb rounded-xl p-5 space-y-4">
+            <div><label class="lbl">Nama Website</label><input type="text" name="siteName" class="inp" value="${esc(s.siteName||'')}"></div>
+            <div><label class="lbl">Tagline</label><input type="text" name="tagline" class="inp" value="${esc(s.tagline||'')}"></div>
+            <div><label class="lbl">Warna Aksen</label><div class="flex gap-2 mt-1">${cbs}</div></div>
+            <button type="submit" class="bg bs px-6 py-2.5"><i class="fas fa-save mr-1"></i>Simpan</button>
+        </form></div>`;
+}
+
+/* ===== MODALS ===== */
+function prodModal(p){
+    const e=!!p;p=p||{name:'',desc:'',price:'',commission:15,image:'',link:'',active:true};
+    return`<div class="mo" onclick="if(event.target===this){S.modal=null;render()}"><div class="mb">
+        <div class="mb-h"><h3 class="font-display font-700 text-base">${e?'Edit':'Tambah'} Produk</h3><button onclick="S.modal=null;render()" class="text-[var(--muted)] hover:text-white text-sm"><i class="fas fa-times"></i></button></div>
+        <div class="mb-b"><form id="f-prod" class="space-y-3">
+            <input type="hidden" name="id" value="${e?p.id:''}">
+            <div><label class="lbl">Nama Produk *</label><input type="text" name="name" class="inp" value="${esc(p.name)}" required></div>
+            <div><label class="lbl">Deskripsi *</label><textarea name="desc" class="inp" rows="2" required>${esc(p.desc)}</textarea></div>
+            <div class="grid grid-cols-2 gap-3">
+                <div><label class="lbl">Harga (Rp) *</label><input type="number" name="price" class="inp" value="${p.price}" min="1000" required></div>
+                <div><label class="lbl">Komisi (%) *</label><input type="number" name="commission" class="inp" value="${p.commission}" min="1" max="90" required></div>
+            </div>
+            <div><label class="lbl">URL Gambar *</label><input type="url" name="image" class="inp" value="${esc(p.image)}" placeholder="https://..." required></div>
+            <div><label class="lbl">Link Afiliasi Asli *</label><input type="url" name="link" class="inp" value="${esc(p.link)}" placeholder="https://marketplace.example.com/..." required></div>
+            <label class="flex items-center gap-2 cursor-pointer mt-1"><input type="checkbox" name="active" ${p.active?'checked':''} class="accent-amber-500"><span class="text-xs">Produk aktif</span></label>
+            <div class="flex gap-2 pt-2"><button type="submit" class="flex-1 bg py-2.5 rounded-xl text-sm">${e?'Simpan':'Tambah'}</button><button type="button" onclick="S.modal=null;render()" class="bo bs px-6 py-2.5 rounded-xl text-sm">Batal</button></div>
+        </form></div></div></div>`;
+}
+
+function userDetailModal(id){
+    const u=DB.get('users',id);if(!u)return'';
+    const txns=DB.where('transactions',t=>t.userId===id);
+    const pc=profComplete(u);
+    const txR=txns.slice(-5).reverse().map(t=>{const p=DB.get('products',t.productId);
+        return`<tr><td class="text-[11px]">${p?esc(p.name):'—'}</td><td class="text-[11px] text-emerald-400">+${Rp(t.commission)}</td><td class="text-[10px] text-[var(--muted)]">${ago(t.createdAt)}</td></tr>`}).join('');
+    return`<div class="mo" onclick="if(event.target===this){S.modal=null;render()}"><div class="mb">
+        <div class="mb-h"><h3 class="font-display font-700 text-base">Detail User</h3><button onclick="S.modal=null;render()" class="text-[var(--muted)] hover:text-white text-sm"><i class="fas fa-times"></i></button></div>
+        <div class="mb-b">
+            <div class="flex items-center gap-3 mb-4"><div class="avatar">${initials(u.name)}</div><div><div class="font-display font-700">${esc(u.name)}</div><div class="text-xs text-[var(--muted)]">${esc(u.email)}</div>
+            <div class="flex items-center gap-2 mt-1"><div class="sbar w-16"><div class="sfill ${pc===100?'bg-emerald-500':'bg-amber-500'}" style="--w:${pc}%"></div></div><span class="text-[9px] ${pc===100?'text-emerald-400':'text-amber-400'}">${pc}%</span></div></div></div>
+            <div class="grid grid-cols-2 gap-3 mb-4">
+                <div class="bg-[var(--bg)] rounded-lg p-3"><div class="text-[9px] text-[var(--muted)]">No. HP</div><div class="text-xs mt-0.5">${esc(u.phone||'—')}</div></div>
+                <div class="bg-[var(--bg)] rounded-lg p-3"><div class="text-[9px] text-[var(--muted)]">Kode Ref</div><div class="text-xs mt-0.5 text-amber-400">${u.refCode}</div></div>
+                <div class="bg-[var(--bg)] rounded-lg p-3"><div class="text-[9px] text-[var(--muted)]">Saldo</div><div class="text-xs mt-0.5 text-amber-400">${Rp(u.balance)}</div></div>
+                <div class="bg-[var(--bg)] rounded-lg p-3"><div class="text-[9px] text-[var(--muted)]">Total Komisi</div><div class="text-xs mt-0.5 text-emerald-400">${Rp(u.totalEarnings||0)}</div></div>
+            </div>
+            <div class="bg-[var(--bg)] rounded-lg p-3 mb-4"><div class="text-[9px] text-[var(--muted)] mb-1"><i class="fas fa-building-columns mr-1"></i>Data Rekening</div>
+            ${(u.bankName&&u.bankName!=='-')?`<div class="text-xs"><span class="text-amber-400">${esc(u.bankName)}</span> — ${esc(u.bankAccount)} a/n <span class="font-medium">${esc(u.bankHolder)}</span></div>`:'<div class="text-xs text-[var(--muted)]">Belum diisi</div>'}</div>
+            <div><div class="text-[10px] text-[var(--muted)] mb-2">5 Transaksi Terakhir</div>
+            <div class="overflow-x-auto"><table><thead><tr><th>Produk</th><th>Komisi</th><th>Waktu</th></tr></thead><tbody>${txR||'<tr><td colspan="3" class="text-center text-[var(--muted)] py-3 text-[10px]">Kosong</td></tr>'}</tbody></table></div></div>
+            <div class="mt-4"><button onclick="delUser('${u.id}')" class="border border-red-500/30 text-red-400 bg-0 bs text-[10px] hover:bg-red-500/10 transition cursor-pointer"><i class="fas fa-trash mr-1"></i>Hapus User</button></div>
+        </div></div></div>`;
+}
+
+/* ===== AKSI ===== */
+function copyAff(pid){
+    if(!S.user){toast('Silakan login dulu','info');go('login');return}
+    refreshUser();const u=S.user;const link=`https://cuandenganbaylos.com/go/${pid}?ref=${u.refCode}`;
+    cpLink(link);DB.update('users',u.id,{clicks:(u.clicks||0)+1});S.user.clicks=(u.clicks||0)+1;
+}
+function cpLink(l){navigator.clipboard.writeText(l).then(()=>toast('Link disalin!','success')).catch(()=>{const t=document.createElement('textarea');t.value=l;document.body.appendChild(t);t.select();document.execCommand('copy');t.remove();toast('Link disalin!','success')})}
+function doLogout(){S.user=null;S.page='home';S.aTab='overview';localStorage.removeItem('cuan_s');render();toast('Keluar','info')}
+
+function reqWithdraw(){
+    refreshUser();const u=S.user;if(!u)return;
+    if(!u.bankName||u.bankName==='-'||!u.bankAccount||u.bankAccount==='-'||!u.bankHolder||u.bankHolder==='-'){toast('Lengkapi data rekening dulu di Profil','error');return}
+    const pw=DB.where('withdrawals',w=>w.userId===u.id&&w.status==='pending').reduce((s,w)=>s+w.amount,0);
+    const avail=Math.max(0,u.balance-pw);if(avail<100000){toast('Saldo tidak cukup','error');return}
+    DB.insert('withdrawals',{userId:u.id,amount:avail,status:'pending',bankName:u.bankName,bankAccount:u.bankAccount,bankHolder:u.bankHolder});
+    toast('Permintaan penarikan dikirim!','success');render();
+}
+function procWd(wid,status){
+    const wds=DB.getAll('withdrawals');const i=wds.findIndex(w=>w.id===wid);if(i<0)return;const w=wds[i];
+    if(status==='rejected'){const u=DB.get('users',w.userId);if(u)DB.update('users',u.id,{balance:u.balance+w.amount})}
+    else{const u=DB.get('users',w.userId);if(u)DB.update('users',u.id,{balance:Math.max(0,u.balance-w.amount)})}
+    wds[i].status=status;wds[i].processedAt=new Date().toISOString();DB._rs('withdrawals',wds);DB._log('UPDATE','withdrawals',wid+'→'+status);
+    toast(status==='paid'?'Dibayar':'Ditolak',status==='paid'?'success':'info');render();
+}
+function addProd(){S.modal=prodModal(null);render()}
+function editProd(id){const p=DB.get('products',id);if(p){S.modal=prodModal(p);render()}}
+function delProd(id){if(!confirm('Hapus produk ini?'))return;DB.delete('products',id);toast('Produk dihapus','info');render()}
+function viewUser(id){S.modal=userDetailModal(id);render()}
+function delUser(id){S.modal=null;DB.delete('users',id);toast('User dihapus','info');render()}
+function setAcc(c){document.documentElement.style.setProperty('--gold',c);const s=DB.cfg();s.accentColor=c;DB.saveCfg(s);toast('Warna diperbarui','success');render()}
+function expTbl(t){const d=DB.getAll(t);const b=new Blob([JSON.stringify(d,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=`cuan_${t}_${Date.now()}.json`;a.click();DB._log('EXPORT',t,d.length+' rows');toast('Exported','success')}
+function expAll(){const d={};Object.keys(DB.schema).forEach(t=>d[t]=DB.getAll(t));d.settings=DB.cfg();const b=new Blob([JSON.stringify(d,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=`cuan_backup_${Date.now()}.json`;a.click();DB._log('EXPORT','ALL','backup');toast('Backup diexport','success')}
+function impAll(e){const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=function(ev){try{const d=JSON.parse(ev.target.result);Object.keys(DB.schema).forEach(t=>{if(Array.isArray(d[t]))DB._rs(t,d[t])});if(d.settings)DB._rso('settings',d.settings);DB._log('IMPORT','ALL','restore');toast('Import berhasil! Memuat...','success');setTimeout(()=>location.reload(),800)}catch(err){toast('File tidak valid','error')}};r.readAsText(f)}
+
+/* ===== EVENT BINDING ===== */
+function bind(){
+    const fl=document.getElementById('f-login');
+    if(fl)fl.onsubmit=function(e){e.preventDefault();const fd=new FormData(fl);const u=DB.where('users',x=>x.email===fd.get('email')&&x.password===fd.get('password'))[0];
+        if(!u){toast('Email atau password salah','error');return}S.user=u;S.page=u.role==='admin'?'admin':'dashboard';localStorage.setItem('cuan_s',JSON.stringify({id:u.id}));render();toast('Selamat datang, '+u.name,'success')};
+
+    const fr=document.getElementById('f-reg');
+    if(fr)fr.onsubmit=function(e){e.preventDefault();const fd=new FormData(fr);
+        if(fd.get('password')!==fd.get('password2')){toast('Password tidak cocok','error');return}
+        if(DB.where('users',x=>x.email===fd.get('email')).length){toast('Email sudah terdaftar','error');return}
+        const u=DB.insert('users',{name:fd.get('name'),email:fd.get('email'),phone:fd.get('phone')||'',password:fd.get('password'),role:'user',refCode:rc(fd.get('name')),bankName:'-',bankAccount:'-',bankHolder:'-',balance:0,totalEarnings:0,clicks:0,createdAt:new Date().toISOString()});
+        S.user=u;S.page='profile';localStorage.setItem('cuan_s',JSON.stringify({id:u.id}));render();toast('Daftar berhasil! Lengkapi profil ya','success')};
+
+    const fp=document.getElementById('f-prod');
+    if(fp)fp.onsubmit=function(e){e.preventDefault();const fd=new FormData(fp);
+        const d={name:fd.get('name'),desc:fd.get('desc'),price:Number(fd.get('price')),commission:Number(fd.get('commission')),image:fd.get('image'),link:fd.get('link'),active:!!fd.get('active')};
+        const eid=fd.get('id');if(eid)DB.update('products',eid,d);else DB.insert('products',{...d,createdAt:new Date().toISOString()});
+        S.modal=null;render();toast(eid?'Diperbarui':'Ditambahkan','success')};
+
+    const fs=document.getElementById('f-sale');
+    if(fs){const sp=fs.querySelector('[name="productId"]');const pv=document.getElementById('sale-pv');
+        if(sp)sp.onchange=function(){const p=DB.get('products',this.value);if(p){const c=Math.round(p.price*p.commission/100);pv.classList.remove('hidden');pv.innerHTML=`Harga: <b class="text-amber-400">${Rp(p.price)}</b> → Komisi: <b class="text-emerald-400">${Rp(c)}</b> (${p.commission}%)`}else pv.classList.add('hidden')};
+        fs.onsubmit=function(e){e.preventDefault();const fd=new FormData(fs);const uid2=fd.get('userId');const pid=fd.get('productId');
+            if(!uid2||!pid){toast('Pilih user dan produk','error');return}const product=DB.get('products',pid);if(!product){toast('Produk tidak ditemukan','error');return}
+            const comm=Math.round(product.price*product.commission/100);DB.insert('transactions',{userId:uid2,productId:pid,amount:product.price,commission:comm});
+            const u=DB.get('users',uid2);if(u)DB.update('users',uid2,{balance:(u.balance||0)+comm,totalEarnings:(u.totalEarnings||0)+comm});
+            toast(`Penjualan dicatat! +${Rp(comm)} ke ${u?u.name:'user'}`,'success');fs.reset();if(pv)pv.classList.add('hidden');render()}}
+
+    const fc=document.getElementById('f-cfg');
+    if(fc)fc.onsubmit=function(e){e.preventDefault();const fd=new FormData(fc);DB.saveCfg({siteName:fd.get('siteName'),tagline:fd.get('tagline'),accentColor:DB.cfg().accentColor});toast('Disimpan','success');render()};
+
+    const fpr=document.getElementById('f-profile');
+    if(fpr)fpr.onsubmit=function(e){e.preventDefault();const fd=new FormData(fpr);
+        if(DB.where('users',x=>x.email===fd.get('email')&&x.id!==S.user.id).length){toast('Email sudah dipakai','error');return}
+        DB.update('users',S.user.id,{name:fd.get('name'),email:fd.get('email'),phone:fd.get('phone')||''});refreshUser();toast('Profil diperbarui','success');render()};
+
+    const fb=document.getElementById('f-bank');
+    if(fb)fb.onsubmit=function(e){e.preventDefault();const fd=new FormData(fb);
+        DB.update('users',S.user.id,{bankName:fd.get('bankName'),bankAccount:fd.get('bankAccount'),bankHolder:fd.get('bankHolder')});refreshUser();toast('Rekening disimpan','success');render()};
+
+    const fpa=document.getElementById('f-pass');
+    if(fpa)fpa.onsubmit=function(e){e.preventDefault();const fd=new FormData(fpa);
+        if(fd.get('oldpass')!==S.user.password){toast('Password lama salah','error');return}
+        if(fd.get('newpass')!==fd.get('newpass2')){toast('Konfirmasi password tidak cocok','error');return}
+        DB.update('users',S.user.id,{password:fd.get('newpass')});refreshUser();toast('Password berhasil diubah','success');render()};
+}
+
+/* ===== PARTICLES ===== */
+function initP(){const c=document.getElementById('pc');const x=c.getContext('2d');let w,h,pts=[];function rz(){w=c.width=innerWidth;h=c.height=innerHeight}rz();addEventListener('resize',rz);
+for(let i=0;i<30;i++)pts.push({x:Math.random()*w,y:Math.random()*h,r:Math.random()*1.2+.4,vx:(Math.random()-.5)*.2,vy:-Math.random()*.3-.06,a:Math.random()*.3+.06});
+function dr(){x.clearRect(0,0,w,h);pts.forEach(p=>{x.beginPath();x.arc(p.x,p.y,Math.max(.4,p.r),0,Math.PI*2);x.fillStyle=`rgba(245,158,11,${p.a})`;x.fill();p.x+=p.vx;p.y+=p.vy;if(p.y<-10){p.y=h+10;p.x=Math.random()*w}if(p.x<-10)p.x=w+10;if(p.x>w+10)p.x=-10});requestAnimationFrame(dr)}
+if(!matchMedia('(prefers-reduced-motion:reduce)').matches)dr()}
+
+/* ===== INIT ===== */
+DB.init();
+const sess=localStorage.getItem('cuan_s');
+if(sess){try{const{id}=JSON.parse(sess);const u=DB.get('users',id);if(u){S.user=u;if(u.role==='admin')S.page='admin'}}catch(e){}}
+render();initP();
+</script>
+</body>
+</html>
