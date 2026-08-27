@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CUAN by Baylos - Toko Afiliasi</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<script>
+tailwind.config={theme:{extend:{fontFamily:{display:['Space Grotesk','sans-serif'],body:['DM Sans','sans-serif']}}}}
+</script>
+<style>
+:root{--bg:#0A0A0A;--fg:#F5F5F5;--muted:#6B6B6B;--accent:#D4A017;--accent-light:#F0C75E;--accent-dark:#8B6914;--card:#131313;--card-hover:#1A1A1A;--border:#1E1E1E;--success:#22C55E;--danger:#EF4444;--warning:#F59E0B}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--fg);font-family:'DM Sans',sans-serif;min-height:100vh;overflow-x:hidden}
+::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+.logo-text{font-family:'Space Grotesk',sans-serif;font-weight:700;background:linear-gradient(135deg,#F0C75E 0%,#D4A017 40%,#8B6914 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:.15em}
+.logo-sub{font-family:'DM Sans',sans-serif;font-weight:300;color:var(--muted);letter-spacing:.35em;text-transform:uppercase;font-size:.65rem}
+@keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+@keyframes slideR{from{opacity:0;transform:translateX(-16px)}to{opacity:1;transform:translateX(0)}}
+@keyframes pulseGold{0%,100%{box-shadow:0 0 0 0 rgba(212,160,23,.35)}50%{box-shadow:0 0 0 12px rgba(212,160,23,0)}}
+@keyframes shimmer{0%{background-position:-200% 0}100%{background-position:200% 0}}
+.fade-up{animation:fadeUp .55s ease-out both}.slide-r{animation:slideR .4s ease-out both}
+.pulse-gold{animation:pulseGold 2s infinite}
+.shimmer{background:linear-gradient(90deg,transparent 30%,rgba(212,160,23,.08) 50%,transparent 70%);background-size:200% 100%;animation:shimmer 3s infinite}
+.product-card{transition:all .3s ease;border:1px solid var(--border);border-radius:.75rem;overflow:hidden;background:var(--card)}
+.product-card:hover{transform:translateY(-5px);border-color:var(--accent);box-shadow:0 12px 40px rgba(212,160,23,.08)}
+.btn-gold{background:linear-gradient(135deg,#D4A017,#8B6914);color:#000;font-weight:600;padding:.65rem 1.5rem;border-radius:.5rem;border:none;cursor:pointer;transition:all .3s;font-family:'DM Sans',sans-serif;font-size:.9rem}
+.btn-gold:hover{background:linear-gradient(135deg,#F0C75E,#D4A017);transform:translateY(-1px);box-shadow:0 4px 20px rgba(212,160,23,.3)}
+.btn-outline{background:transparent;color:var(--accent);border:1px solid var(--accent);padding:.55rem 1.25rem;border-radius:.5rem;cursor:pointer;transition:all .3s;font-family:'DM Sans',sans-serif;font-weight:500;font-size:.85rem}
+.btn-outline:hover{background:rgba(212,160,23,.1)}
+.btn-sm{padding:.4rem .9rem;font-size:.8rem;border-radius:.4rem}
+.btn-danger{background:rgba(239,68,68,.15);color:#EF4444;border:1px solid rgba(239,68,68,.3);padding:.4rem .9rem;border-radius:.4rem;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:.8rem;font-weight:500;transition:all .2s}
+.btn-danger:hover{background:rgba(239,68,68,.25)}
+.btn-success{background:rgba(34,197,94,.15);color:#22C55E;border:1px solid rgba(34,197,94,.3);padding:.4rem .9rem;border-radius:.4rem;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:.8rem;font-weight:500;transition:all .2s}
+.btn-success:hover{background:rgba(34,197,94,.25)}
+.input-field{background:var(--bg);border:1px solid var(--border);color:var(--fg);padding:.75rem 1rem;border-radius:.5rem;font-family:'DM Sans',sans-serif;width:100%;transition:border-color .3s;font-size:.9rem}
+.input-field:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(212,160,23,.1)}
+.input-field::placeholder{color:#444}
+.toast{position:fixed;top:1.25rem;right:1.25rem;z-index:10000;padding:.9rem 1.4rem;border-radius:.7rem;font-weight:500;animation:slideR .3s ease-out;max-width:380px;display:flex;align-items:center;gap:.7rem;font-size:.9rem}
+.toast-success{background:#064E3B;color:#A7F3D0;border:1px solid #10B981}
+.toast-error{background:#7F1D1D;color:#FCA5A5;border:1px solid #EF4444}
+.toast-info{background:#1E3A5F;color:#93C5FD;border:1px solid #3B82F6}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);backdrop-filter:blur(6px);z-index:9998;display:flex;align-items:center;justify-content:center;animation:fadeUp .2s ease-out}
+.modal-box{background:var(--card);border:1px solid var(--border);border-radius:1rem;padding:2rem;max-width:520px;width:92%;max-height:88vh;overflow-y:auto;animation:fadeUp .3s ease-out}
+#particles-canvas{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0}
+.sidebar-item{padding:.7rem 1.4rem;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:.7rem;color:var(--muted);font-weight:500;border-left:3px solid transparent;font-size:.9rem}
+.sidebar-item:hover{color:var(--fg);background:rgba(255,255,255,.02)}
+.sidebar-item.active{color:var(--accent);border-left-color:var(--accent);background:rgba(212,160,23,.04)}
+.data-table{width:100%;border-collapse:collapse}
+.data-table th{text-align:left;padding:.7rem .9rem;border-bottom:1px solid var(--border);color:var(--muted);font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.06em}
+.data-table td{padding:.7rem .9rem;border-bottom:1px solid var(--border);font-size:.85rem}
+.data-table tr:hover td{background:rgba(255,255,255,.015)}
+.stat-card{background:var(--card);border:1px solid var(--border);border-radius:.75rem;padding:1.3rem;transition:all .3s}
+.stat-card:hover{border-color:rgba(212,160,23,.25)}
+.badge{display:inline-flex;align-items:center;padding:.2rem .65rem;border-radius:9999px;font-size:.7rem;font-weight:600}
+.badge-success{background:rgba(34,197,94,.12);color:#22C55E}
+.badge-warning{background:rgba(245,158,11,.12);color:#F59E0B}
+.badge-danger{background:rgba(239,68,68,.12);color:#EF4444}
+.badge-info{background:rgba(96,165,250,.12);color:#60A5FA}
+.hero-glow{position:absolute;width:500px;height:500px;border-radius:50%;filter:blur(120px);opacity:.15;pointer-events:none}
+.nav-link{color:var(--muted);font-weight:500;font-size:.9rem;transition:color .2s;cursor:pointer;padding:.4rem 0;border-bottom:2px solid transparent}
+.nav-link:hover,.nav-link.active{color:var(--accent);border-bottom-color:var(--accent)}
+@media(max-width:768px){.admin-sidebar-wrap{display:none}.admin-sidebar-wrap.open{display:block;position:fixed;top:64px;left:0;right:0;bottom:0;z-index:100;background:var(--card);border-top:1px solid var(--border)}}
+</style>
+</head>
+<body>
+<div id="toast-container"></div>
+<div id="modal-container"></div>
+<div id="app" style="position:relative;z-index:1"></div>
+<canvas id="particles-canvas"></canvas>
+
+<script>
+/* ===== UTILITAS ===== */
+function esc(s){const d=document.createElement('div');d.textContent=s;return d.innerHTML}
+function formatRp(n){return'Rp '+Math.round(n).toLocaleString('id-ID')}
+function genId(){return Date.now().toString(36)+Math.random().toString(36).slice(2,7)}
+function genCode(name){const c=name.replace(/[^a-zA-Z]/g,'').toUpperCase().slice(0,3);const r=Math.random().toString(36).slice(2,6).toUpperCase();return c+r}
+
+/* ===== DATABASE (localStorage) ===== */
+const KEYS={users:'cuan_users',products:'cuan_products',sales:'cuan_sales'};
+function getDB(k){try{return JSON.parse(localStorage.getItem(k))||null}catch{return null}}
+function setDB(k,v){localStorage.setItem(k,JSON.stringify(v))}
+
+const DEFAULT_PRODUCTS=[
+{id:'p1',name:'Headphone Gaming RGB Pro',price:350000,image:'https://picsum.photos/seed/hp77/400/400',desc:'Headphone gaming dengan lampu RGB, driver 50mm, noise cancelling aktif, dan mikrofon detachable.',link:'https://shopee.co.id/sample/headphone-rgb-pro',comm:10,cat:'Audio',active:true},
+{id:'p2',name:'Keyboard Mechanical TKL',price:450000,image:'https://picsum.photos/seed/kb88/400/400',desc:'Keyboard mechanical tenkeyless, switch blue hot-swappable, RGB per-key lighting, PBT keycaps.',link:'https://shopee.co.id/sample/keyboard-mech-tkl',comm:12,cat:'Keyboard',active:true},
+{id:'p3',name:'Mouse Wireless Ergonomis',price:280000,image:'https://picsum.photos/seed/ms99/400/400',desc:'Mouse wireless ergonomis dengan sensor 16000 DPI, 6 tombol programmable, baterai tahan 3 bulan.',link:'https://shopee.co.id/sample/mouse-wireless-ergo',comm:8,cat:'Mouse',active:true},
+{id:'p4',name:'Webcam Full HD 1080p',price:520000,image:'https://picsum.photos/seed/wc55/400/400',desc:'Webcam Full HD 1080p 30fps, auto focus, built-in mic noise reduction, clip universal.',link:'https://shopee.co.id/sample/webcam-fhd-1080p',comm:10,cat:'Aksesoris',active:true},
+{id:'p5',name:'Speaker Bluetooth Portable',price:199000,image:'https://picsum.photos/seed/sp33/400/400',desc:'Speaker bluetooth 5.0 portable, bass kuat, tahan air IPX5, baterai 12 jam.',link:'https://shopee.co.id/sample/speaker-bt-portable',comm:8,cat:'Audio',active:true},
+{id:'p6',name:'Ring Light 26cm + Tripod',price:175000,image:'https://picsum.photos/seed/rl44/400/400',desc:'Ring light LED 26cm 3 warna, 10 level brightness, tripod 2m, remote shutter.',link:'https://shopee.co.id/sample/ring-light-26cm',comm:10,cat:'Aksesoris',active:true},
+{id:'p7',name:'USB Hub 7-Port Charging',price:150000,image:'https://picsum.photos/seed/uh22/400/400',desc:'USB hub 7 port dengan QC 3.0 charging, plug & play, kompatibel semua device.',link:'https://shopee.co.id/sample/usb-hub-7port',comm:7,cat:'Aksesoris',active:true},
+{id:'p8',name:'Mousepad XL Premium Desk',price:125000,image:'https://picsum.photos/seed/mp11/400/400',desc:'Mousepad desk mat XXL 80x30cm, kain microfiber halus, anti-slip rubber base.',link:'https://shopee.co.id/sample/mousepad-xl-desk',comm:10,cat:'Mouse',active:true}
+];
+
+function initDB(){
+if(!getDB(KEYS.users)){
+const admin={id:'adm-001',name:'Baylos',email:'admin@cuan.id',password:'admin123',role:'admin',balance:0,code:'BAYLOS',refBy:null,createdAt:new Date().toISOString()};
+setDB(KEYS.users,[admin]);
+}
+if(!getDB(KEYS.products))setDB(KEYS.products,DEFAULT_PRODUCTS);
+if(!getDB(KEYS.sales))setDB(KEYS.sales,[]);
+}
+
+/* ===== STATE ===== */
+let currentUser=null;
+let currentView='home';
+let referralCode=null;
+let adminTab='overview';
+let userTab='overview';
+let mobileMenuOpen=false;
+let adminSidebarOpen=false;
+
+/* ===== TOAST ===== */
+function toast(msg,type='info'){
+const c=document.getElementById('toast-container');
+const el=document.createElement('div');
+el.className='toast toast-'+type;
+const icons={success:'fa-check-circle',error:'fa-times-circle',info:'fa-info-circle'};
+el.innerHTML=`<i class="fas ${icons[type]||icons.info}"></i><span>${msg}</span>`;
+c.appendChild(el);
+setTimeout(()=>{el.style.opacity='0';el.style.transform='translateX(20px)';el.style.transition='all .3s';setTimeout(()=>el.remove(),300)},3000);
+}
+
+/* ===== MODAL ===== */
+function showModal(html){
+document.getElementById('modal-container').innerHTML=`<div class="modal-overlay" data-action="close-modal"><div class="modal-box" onclick="event.stopPropagation()">${html}</div></div>`;
+}
+function closeModal(){document.getElementById('modal-container').innerHTML=''}
+
+/* ===== AUTH ===== */
+function doLogin(email,pw){
+const users=getDB(KEYS.users);
+const u=users.find(x=>x.email===email&&x.password===pw);
+if(!u){toast('Email atau password salah','error');return false}
+currentUser=u;sessionStorage.setItem('cuan_session',u.id);
+toast('Selamat datang, '+esc(u.name)+'!','success');return true;
+}
+function doRegister(name,email,pw){
+const users=getDB(KEYS.users);
+if(users.find(x=>x.email===email)){toast('Email sudah terdaftar','error');return false}
+if(pw.length<6){toast('Password minimal 6 karakter','error');return false}
+const u={id:'u-'+genId(),name,email,password:pw,role:'user',balance:0,code:genCode(name),refBy:referralCode,createdAt:new Date().toISOString()};
+users.push(u);setDB(KEYS.users,users);
+currentUser=u;sessionStorage.setItem('cuan_session',u.id);
+toast('Registrasi berhasil! Kode afiliasi Anda: '+u.code,'success');return true;
+}
+function doLogout(){currentUser=null;sessionStorage.removeItem('cuan_session');referralCode=null;currentView='home';toast('Berhasil keluar','info');renderApp()}
+function restoreSession(){const sid=sessionStorage.getItem('cuan_session');if(!sid)return;const users=getDB(KEYS.users);currentUser=users.find(x=>x.id===sid)||null}
+
+/* ===== NAVIGASI ===== */
+function nav(view){currentView=view;mobileMenuOpen=false;adminSidebarOpen=false;renderApp();window.scrollTo({top:0,behavior:'smooth'})}
+
+/* ===== RENDER UTAMA ===== */
+function renderApp(){
+const app=document.getElementById('app');
+let html='';
+if(currentView==='admin'&&currentUser&&currentUser.role==='admin'){html=renderAdminPage()}
+else{html=renderNav()+renderMainView()+renderFooter()}
+app.innerHTML=html;
+}
+
+/* ===== NAVIGASI BAR ===== */
+function renderNav(){
+const isLogged=!!currentUser;
+const isAdmin=isLogged&&currentUser.role==='admin';
+let authBtns='';
+if(!isLogged)authBtns=`<button data-action="nav-login" class="btn-outline btn-sm">Masuk</button><button data-action="nav-register" class="btn-gold btn-sm" style="margin-left:.5rem">Daftar</button>`;
+else authBtns=`<span class="text-sm" style="color:var(--muted)">Halo, <strong style="color:var(--accent)">${esc(currentUser.name)}</strong></span>
+ ${isAdmin?'<button data-action="nav-admin" class="btn-outline btn-sm" style="margin-left:.75rem"><i class="fas fa-cog mr-1"></i>Admin</button>':'<button data-action="nav-dashboard" class="btn-outline btn-sm" style="margin-left:.75rem"><i class="fas fa-wallet mr-1"></i>Dashboard</button>'}
+<button data-action="nav-logout" class="btn-danger btn-sm" style="margin-left:.5rem"><i class="fas fa-sign-out-alt"></i></button>`;
+
+return`<nav style="background:rgba(10,10,10,.85);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:500">
+<div style="max-width:1200px;margin:0 auto;padding:.75rem 1.25rem;display:flex;align-items:center;justify-content:space-between">
+<div style="display:flex;align-items:center;gap:.5rem;cursor:pointer" data-action="nav-home">
+<div style="width:36px;height:36px;border-radius:8px;background:linear-gradient(135deg,#D4A017,#8B6914);display:flex;align-items:center;justify-content:center;font-weight:800;color:#000;font-family:'Space Grotesk';font-size:1rem">C</div>
+<div><div class="logo-text" style="font-size:1.2rem;line-height:1.1">CUAN</div><div class="logo-sub">by baylos</div></div>
+</div>
+<div style="display:flex;align-items:center;gap:1.25rem" class="hidden md:flex">
+<a class="nav-link ${currentView==='home'?'active':''}" data-action="nav-home">Beranda</a>
+<a class="nav-link" data-action="scroll-products">Produk</a>
+<a class="nav-link" data-action="scroll-how">Cara Kerja</a>
+</div>
+<div style="display:flex;align-items:center;gap:.5rem">${authBtns}<button data-action="toggle-mobile" class="md:hidden" style="background:none;border:none;color:var(--fg);font-size:1.3rem;cursor:pointer;padding:.25rem"><i class="fas fa-bars"></i></button></div>
+</div>
+ ${mobileMenuOpen?`<div style="padding:.5rem 1.25rem 1rem;border-top:1px solid var(--border);display:flex;flex-direction:column;gap:.5rem" class="md:hidden">
+<a class="nav-link" data-action="nav-home">Beranda</a><a class="nav-link" data-action="scroll-products">Produk</a><a class="nav-link" data-action="scroll-how">Cara Kerja</a>
+</div>`:''}
+</nav>`;
+}
+
+/* ===== RENDER VIEW UTAMA ===== */
+function renderMainView(){
+if(currentView==='login')return renderLogin();
+if(currentView==='register')return renderRegister();
+if(currentView==='dashboard'&&currentUser)return renderUserDash();
+return renderHome();
+}
+
+/* ===== HALAMAN BERANDA ===== */
+function renderHome(){
+const products=getDB(KEYS.products).filter(p=>p.active);
+let prodCards=products.map((p,i)=>`
+<div class="product-card fade-up" style="animation-delay:${i*.07}s">
+<div style="position:relative;overflow:hidden"><img src="${esc(p.image)}" alt="${esc(p.name)}" style="width:100%;height:220px;object-fit:cover;transition:transform .4s" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+<div style="position:absolute;top:.75rem;right:.75rem"><span class="badge badge-success"><i class="fas fa-coins mr-1"></i>Komisi ${p.comm}%</span></div>
+</div>
+<div style="padding:1.1rem">
+<h3 style="font-family:'Space Grotesk';font-weight:600;font-size:1rem;margin-bottom:.4rem;line-height:1.3">${esc(p.name)}</h3>
+<p style="color:var(--muted);font-size:.8rem;line-height:1.5;margin-bottom:.75rem;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden">${esc(p.desc)}</p>
+<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem">
+<span style="font-family:'Space Grotesk';font-weight:700;font-size:1.1rem;color:var(--accent)">${formatRp(p.price)}</span>
+<span style="color:var(--success);font-size:.8rem;font-weight:500">+${formatRp(p.price*p.comm/100)}</span>
+</div>
+<button data-action="buy-product" data-id="${p.id}" class="btn-gold" style="width:100%;font-size:.85rem;padding:.6rem"><i class="fas fa-shopping-cart mr-2"></i>Beli Sekarang</button>
+</div>
+</div>`).join('');
+
+return`
+<!-- HERO -->
+<section style="position:relative;min-height:85vh;display:flex;align-items:center;justify-content:center;overflow:hidden;padding:2rem 1.25rem">
+<div class="hero-glow" style="background:var(--accent);top:-100px;left:-100px"></div>
+<div class="hero-glow" style="background:#8B6914;bottom:-100px;right:-100px"></div>
+<div style="text-align:center;max-width:700px;position:relative;z-index:2">
+<div class="fade-up">
+<div style="display:inline-flex;align-items:center;gap:.5rem;padding:.4rem 1rem;border-radius:9999px;border:1px solid var(--border);margin-bottom:2rem;font-size:.8rem;color:var(--muted)">
+<i class="fas fa-bolt" style="color:var(--accent)"></i> Platform Afiliasi Terpercaya
+</div>
+</div>
+<div class="fade-up" style="animation-delay:.1s">
+<div style="font-family:'Space Grotesk';font-weight:700;font-size:clamp(3rem,10vw,6rem);line-height:1;background:linear-gradient(135deg,#F0C75E 0%,#D4A017 35%,#8B6914 70%,#D4A017 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:.12em;margin-bottom:.5rem">CUAN</div>
+<div class="logo-sub" style="font-size:.85rem;letter-spacing:.5em;margin-bottom:2rem">by baylos</div>
+</div>
+<p class="fade-up" style="animation-delay:.2s;color:var(--muted);font-size:1.1rem;line-height:1.7;max-width:520px;margin:0 auto 2.5rem">Dapatkan penghasilan dari setiap penjualan yang Anda referensikan. Daftar gratis, bagikan link, dan raih komisi tanpa batas.</p>
+<div class="fade-up" style="animation-delay:.3s;display:flex;gap:1rem;justify-content:center;flex-wrap:wrap">
+<button data-action="nav-register" class="btn-gold pulse-gold" style="padding:.8rem 2rem;font-size:1rem"><i class="fas fa-rocket mr-2"></i>Mulai Sekarang</button>
+<button data-action="scroll-products" class="btn-outline" style="padding:.8rem 2rem;font-size:1rem"><i class="fas fa-eye mr-2"></i>Lihat Produk</button>
+</div>
+<div class="fade-up" style="animation-delay:.45s;display:flex;gap:2.5rem;justify-content:center;margin-top:3.5rem">
+<div style="text-align:center"><div style="font-family:'Space Grotesk';font-weight:700;font-size:1.6rem;color:var(--accent)">8+</div><div style="color:var(--muted);font-size:.75rem;margin-top:.2rem">Produk</div></div>
+<div style="text-align:center"><div style="font-family:'Space Grotesk';font-weight:700;font-size:1.6rem;color:var(--accent)">10%</div><div style="color:var(--muted);font-size:.75rem;margin-top:.2rem">Komisi</div></div>
+<div style="text-align:center"><div style="font-family:'Space Grotesk';font-weight:700;font-size:1.6rem;color:var(--accent)">Gratis</div><div style="color:var(--muted);font-size:.75rem;margin-top:.2rem">Daftar</div></div>
+</div>
+</div>
+</section>
+
+<!-- PRODUK -->
+<section id="section-products" style="max-width:1200px;margin:0 auto;padding:4rem 1.25rem">
+<div style="text-align:center;margin-bottom:3rem">
+<span class="badge badge-info" style="margin-bottom:1rem;display:inline-flex"><i class="fas fa-fire mr-1"></i>Produk Terpilih</span>
+<h2 style="font-family:'Space Grotesk';font-weight:700;font-size:2rem;margin-top:.75rem">Katalog Produk</h2>
+<p style="color:var(--muted);margin-top:.5rem;max-width:480px;margin-left:auto;margin-right:auto">Pilih produk, bagikan link afiliasi Anda, dan dapatkan komisi dari setiap penjualan berhasil.</p>
+</div>
+<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1.25rem">${prodCards}</div>
+</section>
+
+<!-- CARA KERJA -->
+<section id="section-how" style="max-width:1000px;margin:0 auto;padding:4rem 1.25rem">
+<div style="text-align:center;margin-bottom:3rem">
+<span class="badge badge-warning" style="margin-bottom:1rem;display:inline-flex"><i class="fas fa-lightbulb mr-1"></i>Mudah & Cepat</span>
+<h2 style="font-family:'Space Grotesk';font-weight:700;font-size:2rem;margin-top:.75rem">Cara Kerja Afiliasi</h2>
+</div>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1.5rem">
+ ${[
+{icon:'fa-user-plus',title:'1. Daftar Gratis',desc:'Buat akun dalam hitungan detik. Langsung dapat kode afiliasi unik.'},
+{icon:'fa-link',title:'2. Salin Link',desc:'Dapatkan link afiliasi khusus untuk setiap produk yang tersedia.'},
+{icon:'fa-share-nodes',title:'3. Bagikan',desc:'Sebarkan link ke sosial media, teman, atau komunitas Anda.'},
+{icon:'fa-coins',title:'4. Dapat Komisi',desc:'Terima komisi langsung ke saldo Anda setiap ada penjualan berhasil.'}
+].map((s,i)=>`<div class="stat-card fade-up" style="animation-delay:${i*.1}s;text-align:center;padding:2rem 1.5rem">
+<div style="width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,rgba(212,160,23,.15),rgba(139,105,20,.1));display:flex;align-items:center;justify-content:center;margin:0 auto 1rem"><i class="fas ${s.icon}" style="color:var(--accent);font-size:1.2rem"></i></div>
+<h3 style="font-family:'Space Grotesk';font-weight:600;font-size:1rem;margin-bottom:.5rem">${s.title}</h3>
+<p style="color:var(--muted);font-size:.85rem;line-height:1.6">${s.desc}</p>
+</div>`).join('')}
+</div>
+</section>
+
+ ${referralCode?`<div style="max-width:600px;margin:0 auto 3rem;padding:0 1.25rem">
+<div class="shimmer" style="background:rgba(212,160,23,.06);border:1px solid rgba(212,160,23,.2);border-radius:.75rem;padding:1.2rem 1.5rem;display:flex;align-items:center;gap:1rem">
+<i class="fas fa-tag" style="color:var(--accent);font-size:1.3rem"></i>
+<div><div style="font-weight:600;font-size:.9rem">Link Afiliasi Terdeteksi</div><div style="color:var(--muted);font-size:.8rem">Anda mengunjungi melalui referral <strong style="color:var(--accent)">${esc(referralCode)}</strong></div></div>
+</div></div>`:''}`;
+}
+
+/* ===== HALAMAN LOGIN ===== */
+function renderLogin(){
+return`<section style="max-width:420px;margin:4rem auto;padding:0 1.25rem">
+<div class="fade-up" style="text-align:center;margin-bottom:2rem">
+<div class="logo-text" style="font-size:2.5rem;letter-spacing:.15em">CUAN</div>
+<div class="logo-sub" style="font-size:.75rem;margin-top:.3rem">by baylos</div>
+</div>
+<div class="fade-up" style="animation-delay:.1s;background:var(--card);border:1px solid var(--border);border-radius:1rem;padding:2rem">
+<h2 style="font-family:'Space Grotesk';font-weight:600;font-size:1.4rem;margin-bottom:.3rem">Masuk ke Akun</h2>
+<p style="color:var(--muted);font-size:.85rem;margin-bottom:1.5rem">Masuk untuk mengelola link afiliasi dan komisi Anda</p>
+<form data-action="submit-login" style="display:flex;flex-direction:column;gap:1rem">
+<div><label style="font-size:.8rem;color:var(--muted);display:block;margin-bottom:.35rem">Email</label><input type="email" class="input-field" id="login-email" placeholder="nama@email.com" required></div>
+<div><label style="font-size:.8rem;color:var(--muted);display:block;margin-bottom:.35rem">Password</label><input type="password" class="input-field" id="login-pass" placeholder="Masukkan password" required></div>
+<button type="submit" class="btn-gold" style="margin-top:.5rem;padding:.75rem">Masuk</button>
+</form>
+<p style="text-align:center;margin-top:1.25rem;font-size:.85rem;color:var(--muted)">Belum punya akun? <a style="color:var(--accent);cursor:pointer;font-weight:600" data-action="nav-register">Daftar Sekarang</a></p>
+</div></section>`;
+}
+
+/* ===== HALAMAN REGISTER ===== */
+function renderRegister(){
+return`<section style="max-width:420px;margin:4rem auto;padding:0 1.25rem">
+<div class="fade-up" style="text-align:center;margin-bottom:2rem">
+<div class="logo-text" style="font-size:2.5rem;letter-spacing:.15em">CUAN</div>
+<div class="logo-sub" style="font-size:.75rem;margin-top:.3rem">by baylos</div>
+</div>
+<div class="fade-up" style="animation-delay:.1s;background:var(--card);border:1px solid var(--border);border-radius:1rem;padding:2rem">
+<h2 style="font-family:'Space Grotesk';font-weight:600;font-size:1.4rem;margin-bottom:.3rem">Buat Akun Baru</h2>
+<p style="color:var(--muted);font-size:.85rem;margin-bottom:1.5rem">Daftar gratis dan mulai dapatkan komisi afiliasi</p>
+<form data-action="submit-register" style="display:flex;flex-direction:column;gap:1rem">
+<div><label style="font-size:.8rem;color:var(--muted);display:block;margin-bottom:.35rem">Nama Lengkap</label><input type="text" class="input-field" id="reg-name" placeholder="Nama Anda" required></div>
+<div><label style="font-size:.8rem;color:var(--muted);display:block;margin-bottom:.35rem">Email</label><input type="email" class="input-field" id="reg-email" placeholder="nama@email.com" required></div>
+<div><label style="font-size:.8rem;color:var(--muted);display:block;margin-bottom:.35rem">Password (min. 6 karakter)</label><input type="password" class="input-field" id="reg-pass" placeholder="Buat password" required></div>
+<button type="submit" class="btn-gold" style="margin-top:.5rem;padding:.75rem">Daftar</button>
+</form>
+<p style="text-align:center;margin-top:1.25rem;font-size:.85rem;color:var(--muted)">Sudah punya akun? <a style="color:var(--accent);cursor:pointer;font-weight:600" data-action="nav-login">Masuk</a></p>
+</div></section>`;
+}
+
+/* ===== USER DASHBOARD ===== */
+function renderUserDash(){
+const users=getDB(KEYS.users);const sales=getDB(KEYS.sales);const products=getDB(KEYS.products);
+const mySales=sales.filter(s=>s.affUserId===currentUser.id);
+const approved=mySales.filter(s=>s.status==='approved');
+const pending=mySales.filter(s=>s.status==='pending');
+const totalEarned=approved.reduce((a,s)=>a+s.commAmt,0);
+const pendingAmt=pending.reduce((a,s)=>a+s.commAmt,0);
+const affLink=window.location.origin+window.location.pathname+'?ref='+currentUser.code;
+const tabs=[
+{id:'overview',label:'Ringkasan',icon:'fa-chart-pie'},
+{id:'link',label:'Link Afiliasi',icon:'fa-link'},
+{id:'history',label:'Riwayat Komisi',icon:'fa-history'}
+];
+let tabContent='';
+if(userTab==='overview'){
+tabContent=`
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1rem;margin-bottom:2rem">
+<div class="stat-card fade-up"><div style="color:var(--muted);font-size:.75rem;margin-bottom:.5rem"><i class="fas fa-wallet mr-1"></i>Saldo</div><div style="font-family:'Space Grotesk';font-weight:700;font-size:1.4rem;color:var(--accent)">${formatRp(totalEarned)}</div></div>
+<div class="stat-card fade-up" style="animation-delay:.05s"><div style="color:var(--muted);font-size:.75rem;margin-bottom:.5rem"><i class="fas fa-clock mr-1"></i>Pending</div><div style="font-family:'Space Grotesk';font-weight:700;font-size:1.4rem;color:var(--warning)">${formatRp(pendingAmt)}</div></div>
+<div class="stat-card fade-up" style="animation-delay:.1s"><div style="color:var(--muted);font-size:.75rem;margin-bottom:.5rem"><i class="fas fa-check-circle mr-1"></i>Komisi Sukses</div><div style="font-family:'Space Grotesk';font-weight:700;font-size:1.4rem">${approved.length}</div></div>
+<div class="stat-card fade-up" style="animation-delay:.15s"><div style="color:var(--muted);font-size:.75rem;margin-bottom:.5rem"><i class="fas fa-users mr-1"></i>Referral Kode</div><div style="font-family:'Space Grotesk';font-weight:700;font-size:1.4rem;color:var(--accent)">${currentUser.code}</div></div>
+</div>
+<div style="background:var(--card);border:1px solid var(--border);border-radius:.75rem;padding:1.5rem">
+<h3 style="font-family:'Space Grotesk';font-weight:600;margin-bottom:1rem">Komisi Terakhir</h3>
+ ${approved.length===0?'<p style="color:var(--muted);font-size:.85rem">Belum ada komisi yang berhasil.</p>':
+`<div style="overflow-x:auto"><table class="data-table"><thead><tr><th>Produk</th><th>Komisi</th><th>Tanggal</th></tr></thead><tbody>
+ ${approved.slice(-5).reverse().map(s=>{const p=products.find(x=>x.id===s.productId);return`<tr><td>${esc(p?p.name:'Produk dihapus')}</td><td style="color:var(--success);font-weight:600">+${formatRp(s.commAmt)}</td><td style="color:var(--muted)">${new Date(s.date).toLocaleDateString('id-ID')}</td></tr>`}).join('')}
+</tbody></table></div>`}
+</div>`;
+}else if(userTab==='link'){
+tabContent=`
+<div class="fade-up" style="background:var(--card);border:1px solid var(--border);border-radius:.75rem;padding:2rem;margin-bottom:1.5rem">
+<h3 style="font-family:'Space Grotesk';font-weight:600;margin-bottom:.5rem">Link Afiliasi Anda</h3>
+<p style="color:var(--muted);font-size:.85rem;margin-bottom:1.25rem">Bagikan link ini ke siapa saja. Setiap pembelian melalui link ini akan memberikan Anda komisi.</p>
+<div style="display:flex;gap:.5rem">
+<input type="text" class="input-field" value="${esc(affLink)}" readonly id="aff-link-input" style="font-family:monospace;font-size:.85rem">
+<button data-action="copy-aff-link" class="btn-gold btn-sm" style="white-space:nowrap;min-width:100px"><i class="fas fa-copy mr-1"></i>Salin</button>
+</div>
+<div style="margin-top:1rem;padding:.75rem 1rem;background:rgba(212,160,23,.06);border:1px solid rgba(212,160,23,.15);border-radius:.5rem;font-size:.8rem;color:var(--muted)">
+<i class="fas fa-info-circle mr-1" style="color:var(--accent)"></i> Kode referral Anda: <strong style="color:var(--accent)">${currentUser.code}</strong>
+</div>
+</div>
+<div class="fade-up" style="animation-delay:.1s;background:var(--card);border:1px solid var(--border);border-radius:.75rem;padding:2rem">
+<h3 style="font-family:'Space Grotesk';font-weight:600;margin-bottom:1rem">Cara Menggunakan Link</h3>
+<div style="display:flex;flex-direction:column;gap:1rem">
+ ${['Salin link afiliasi di atas','Bagikan ke WhatsApp, Instagram, TikTok, atau media lainnya','Orang lain klik link dan membeli produk','Anda menerima komisi otomatis ke saldo'].map((t,i)=>`<div style="display:flex;align-items:flex-start;gap:.75rem"><div style="min-width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,rgba(212,160,23,.15),rgba(139,105,20,.1));display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700;color:var(--accent)">${i+1}</div><span style="font-size:.9rem;padding-top:.2rem">${t}</span></div>`).join('')}
+</div>
+</div>`;
+}else{
+tabContent=`
+<div class="fade-up" style="background:var(--card);border:1px solid var(--border);border-radius:.75rem;overflow:hidden">
+ ${mySales.length===0?'<div style="padding:3rem;text-align:center"><i class="fas fa-inbox" style="font-size:2rem;color:var(--border);margin-bottom:1rem;display:block"></i><p style="color:var(--muted);font-size:.9rem">Belum ada riwayat komisi.</p></div>':
+`<div style="overflow-x:auto"><table class="data-table"><thead><tr><th>Produk</th><th>Komisi</th><th>Status</th><th>Tanggal</th></tr></thead><tbody>
+ ${mySales.slice().reverse().map(s=>{const p=products.find(x=>x.id===s.productId);const st=s.status==='approved'?'badge-success':'badge-warning';const sl=s.status==='approved'?'Disetujui':'Pending';return`<tr><td>${esc(p?p.name:'-')}</td><td style="font-weight:600;color:${s.status==='approved'?'var(--success)':'var(--warning)'}">${formatRp(s.commAmt)}</td><td><span class="badge ${st}">${sl}</span></td><td style="color:var(--muted)">${new Date(s.date).toLocaleDateString('id-ID')}</td></tr>`}).join('')}
+</tbody></table></div>`}
+</div>`;
+}
+return`<section style="max-width:1000px;margin:2rem auto;padding:0 1.25rem">
+<div class="fade-up" style="margin-bottom:2rem"><h1 style="font-family:'Space Grotesk';font-weight:700;font-size:1.8rem">Dashboard</h1><p style="color:var(--muted);font-size:.9rem;margin-top:.25rem">Kelola link afiliasi dan pantau penghasilan Anda</p></div>
+<div style="display:flex;gap:0;border-bottom:1px solid var(--border);margin-bottom:2rem;overflow-x:auto">
+ ${tabs.map(t=>`<button data-action="user-tab" data-tab="${t.id}" style="padding:.7rem 1.2rem;background:none;border:none;color:${userTab===t.id?'var(--accent)':'var(--muted)'};font-family:'DM Sans';font-weight:${userTab===t.id?'600':'400'};font-size:.9rem;cursor:pointer;border-bottom:2px solid ${userTab===t.id?'var(--accent)':'transparent'};white-space:nowrap;transition:all .2s"><i class="fas ${t.icon} mr-1"></i>${t.label}</button>`).join('')}
+</div>
+ ${tabContent}
+</section>`;
+}
+
+/* ===== HALAMAN ADMIN ===== */
+function renderAdminPage(){
+const users=getDB(KEYS.users);const sales=getDB(KEYS.sales);const products=getDB(KEYS.products);
+const totalUsers=users.filter(u=>u.role!=='admin').length;
+const totalSales=sales.filter(s=>s.status==='approved').length;
+const totalCommPaid=sales.filter(s=>s.status==='approved').reduce((a,s)=>a+s.commAmt,0);
+const pendingSales=sales.filter(s=>s.status==='pending').length;
+const sidebarItems=[
+{id:'overview',label:'Dashboard',icon:'fa-chart-line'},
+{id:'products',label:'Kelola Produk',icon:'fa-box'},
+{id:'users',label:'Data Pengguna',icon:'fa-users'},
+{id:'sales',label:'Riwayat Penjualan',icon:'fa-receipt'}
+];
+let content='';
+if(adminTab==='overview'){
+content=`<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;margin-bottom:2rem">
+<div class="stat-card fade-up"><div style="color:var(--muted);font-size:.75rem;margin-bottom:.5rem"><i class="fas fa-users mr-1"></i>Total Pengguna</div><div style="font-family:'Space Grotesk';font-weight:700;font-size:1.6rem">${totalUsers}</div></div>
+<div class="stat-card fade-up" style="animation-delay:.05s"><div style="color:var(--muted);font-size:.75rem;margin-bottom:.5rem"><i class="fas fa-box mr-1"></i>Total Produk</div><div style="font-family:'Space Grotesk';font-weight:700;font-size:1.6rem">${products.length}</div></div>
+<div class="stat-card fade-up" style="animation-delay:.1s"><div style="color:var(--muted);font-size:.75rem;margin-bottom:.5rem"><i class="fas fa-check mr-1"></i>Penjualan Sukses</div><div style="font-family:'Space Grotesk';font-weight:700;font-size:1.6rem;color:var(--success)">${totalSales}</div></div>
+<div class="stat-card fade-up" style="animation-delay:.15s"><div style="color:var(--muted);font-size:.75rem;margin-bottom:.5rem"><i class="fas fa-coins mr-1"></i>Komisi Dibayarkan</div><div style="font-family:'Space Grotesk';font-weight:700;font-size:1.6rem;color:var(--accent)">${formatRp(totalCommPaid)}</div></div>
+</div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem" class="md:grid-cols-2">
+<div class="stat-card fade-up" style="animation-delay:.2s"><h3 style="font-family:'Space Grotesk';font-weight:600;font-size:.95rem;margin-bottom:1rem"><i class="fas fa-clock mr-1" style="color:var(--warning)"></i>Menunggu Persetujuan</h3>${pendingSales===0?'<p style="color:var(--muted);font-size:.85rem">Tidak ada penjualan pending.</p>':`<p style="font-family:'Space Grotesk';font-weight:700;font-size:2rem;color:var(--warning)">${pendingSales}</p><p style="color:var(--muted);font-size:.8rem">penjualan menunggu review</p>`}</div>
+<div class="stat-card fade-up" style="animation-delay:.25s"><h3 style="font-family:'Space Grotesk';font-weight:600;font-size:.95rem;margin-bottom:1rem"><i class="fas fa-trophy mr-1" style="color:var(--accent)"></i>Afiliasi Teratas</h3>${(()=>{const ranks=users.filter(u=>u.role!=='admin').map(u=>({...u,earned:sales.filter(s=>s.affUserId===u.id&&s.status==='approved').reduce((a,s)=>a+s.commAmt,0)})).sort((a,b)=>b.earned-a.earned).slice(0,3);return ranks.length===0?'<p style="color:var(--muted);font-size:.85rem">Belum ada data.</p>':ranks.map((r,i)=>`<div style="display:flex;align-items:center;justify-content:space-between;padding:.4rem 0;${i>0?'border-top:1px solid var(--border)':''}"><span style="font-size:.85rem"><span style="color:var(--accent);font-weight:700;margin-right:.5rem">#${i+1}</span>${esc(r.name)}</span><span style="color:var(--success);font-size:.85rem;font-weight:600">${formatRp(r.earned)}</span></div>`).join('')})()}</div>
+</div>`;
+}else if(adminTab==='products'){
+content=`<div class="fade-up" style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;flex-wrap:wrap;gap:.75rem">
+<h3 style="font-family:'Space Grotesk';font-weight:600;font-size:1.1rem">Kelola Produk (${products.length})</h3>
+<button data-action="admin-add-product" class="btn-gold btn-sm"><i class="fas fa-plus mr-1"></i>Tambah Produk</button>
+</div>
+<div class="fade-up" style="animation-delay:.05s;background:var(--card);border:1px solid var(--border);border-radius:.75rem;overflow:hidden">
+ ${products.length===0?'<div style="padding:3rem;text-align:center;color:var(--muted)">Belum ada produk.</div>':`<div style="overflow-x:auto"><table class="data-table"><thead><tr><th>Produk</th><th>Harga</th><th>Komisi</th><th>Status</th><th>Aksi</th></tr></thead><tbody>
+ ${products.map(p=>`<tr><td style="display:flex;align-items:center;gap:.75rem"><img src="${esc(p.image)}" style="width:40px;height:40px;border-radius:6px;object-fit:cover">${esc(p.name)}</td><td style="font-family:'Space Grotesk';font-weight:600">${formatRp(p.price)}</td><td><span class="badge badge-success">${p.comm}%</span></td><td><span class="badge ${p.active?'badge-success':'badge-danger'}">${p.active?'Aktif':'Nonaktif'}</span></td><td style="white-space:nowrap"><button data-action="admin-edit-product" data-id="${p.id}" class="btn-outline btn-sm" style="margin-right:.35rem"><i class="fas fa-pen"></i></button><button data-action="admin-del-product" data-id="${p.id}" class="btn-danger btn-sm"><i class="fas fa-trash"></i></button></td></tr>`).join('')}
+</tbody></table></div>`}
+</div>`;
+}else if(adminTab==='users'){
+const regUsers=users.filter(u=>u.role!=='admin');
+content=`<div class="fade-up" style="margin-bottom:1.5rem"><h3 style="font-family:'Space Grotesk';font-weight:600;font-size:1.1rem">Data Pengguna (${regUsers.length})</h3></div>
+<div class="fade-up" style="animation-delay:.05s;background:var(--card);border:1px solid var(--border);border-radius:.75rem;overflow:hidden">
+ ${regUsers.length===0?'<div style="padding:3rem;text-align:center;color:var(--muted)">Belum ada pengguna terdaftar.</div>':`<div style="overflow-x:auto"><table class="data-table"><thead><tr><th>Nama</th><th>Email</th><th>Kode Afiliasi</th><th>Saldo</th><th>Referral</th><th>Terdaftar</th></tr></thead><tbody>
+ ${regUsers.map(u=>{const uSales=sales.filter(s=>s.affUserId===u.id&&s.status==='approved');const bal=uSales.reduce((a,s)=>a+s.commAmt,0);const refs=users.filter(x=>x.refBy===u.code).length;return`<tr><td style="font-weight:500">${esc(u.name)}</td><td style="color:var(--muted)">${esc(u.email)}</td><td><span class="badge badge-info">${esc(u.code)}</span></td><td style="color:var(--accent);font-weight:600">${formatRp(bal)}</td><td>${refs}</td><td style="color:var(--muted);font-size:.8rem">${new Date(u.createdAt).toLocaleDateString('id-ID')}</td></tr>`}).join('')}
+</tbody></table></div>`}
+</div>`;
+}else{
+content=`<div class="fade-up" style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;flex-wrap:wrap;gap:.75rem">
+<h3 style="font-family:'Space Grotesk';font-weight:600;font-size:1.1rem">Riwayat Penjualan (${sales.length})</h3>
+<button data-action="admin-add-sale" class="btn-gold btn-sm"><i class="fas fa-plus mr-1"></i>Catat Penjualan Manual</button>
+</div>
+<div class="fade-up" style="animation-delay:.05s;background:var(--card);border:1px solid var(--border);border-radius:.75rem;overflow:hidden">
+ ${sales.length===0?'<div style="padding:3rem;text-align:center;color:var(--muted)">Belum ada data penjualan.</div>':`<div style="overflow-x:auto"><table class="data-table"><thead><tr><th>Produk</th><th>Afiliasi</th><th>Komisi</th><th>Status</th><th>Tanggal</th><th>Aksi</th></tr></thead><tbody>
+ ${sales.slice().reverse().map(s=>{const p=products.find(x=>x.id===s.productId);const affUser=users.find(u=>u.id===s.affUserId);const stClass=s.status==='approved'?'badge-success':s.status==='rejected'?'badge-danger':'badge-warning';const stLabel=s.status==='approved'?'Disetujui':s.status==='rejected'?'Ditolak':'Pending';return`<tr><td>${esc(p?p.name:'-')}</td><td>${affUser?`<span style="color:var(--accent)">${esc(affUser.name)}</span> <span style="color:var(--muted);font-size:.75rem">(${esc(affUser.code)})</span>`:'<span style="color:var(--muted)">-</span>'}</td><td style="font-weight:600">${formatRp(s.commAmt)}</td><td><span class="badge ${stClass}">${stLabel}</span></td><td style="color:var(--muted);font-size:.8rem">${new Date(s.date).toLocaleDateString('id-ID')}</td><td>${s.status==='pending'?`<button data-action="approve-sale" data-id="${s.id}" class="btn-success btn-sm" style="margin-right:.3rem"><i class="fas fa-check"></i></button><button data-action="reject-sale" data-id="${s.id}" class="btn-danger btn-sm"><i class="fas fa-times"></i></button>`:'-'}</td></tr>`}).join('')}
+</tbody></table></div>`}
+</div>`;
+}
+return`
+<nav style="background:rgba(10,10,10,.9);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:500">
+<div style="max-width:1400px;margin:0 auto;padding:.6rem 1.25rem;display:flex;align-items:center;justify-content:space-between">
+<div style="display:flex;align-items:center;gap:.75rem">
+<button data-action="toggle-admin-sidebar" class="md:hidden" style="background:none;border:none;color:var(--fg);font-size:1.2rem;cursor:pointer"><i class="fas fa-bars"></i></button>
+<div style="display:flex;align-items:center;gap:.5rem;cursor:pointer" data-action="nav-home">
+<div style="width:32px;height:32px;border-radius:6px;background:linear-gradient(135deg,#D4A017,#8B6914);display:flex;align-items:center;justify-content:center;font-weight:800;color:#000;font-family:'Space Grotesk';font-size:.85rem">C</div>
+<div><div class="logo-text" style="font-size:1rem;line-height:1.1">CUAN</div><div class="logo-sub" style="font-size:.55rem">Admin Panel</div></div>
+</div>
+</div>
+<div style="display:flex;align-items:center;gap:1rem">
+<span style="font-size:.85rem;color:var(--muted)">Halo, <strong style="color:var(--accent)">${esc(currentUser.name)}</strong></span>
+<button data-action="nav-home" class="btn-outline btn-sm"><i class="fas fa-globe mr-1"></i>Lihat Toko</button>
+<button data-action="nav-logout" class="btn-danger btn-sm"><i class="fas fa-sign-out-alt"></i></button>
+</div>
+</div>
+</nav>
+<div style="display:flex;max-width:1400px;margin:0 auto;min-height:calc(100vh - 57px)">
+<div class="${adminSidebarOpen?'open':''} admin-sidebar-wrap" style="width:240px;min-width:240px;border-right:1px solid var(--border);padding:1.25rem 0;background:var(--card)">
+ ${sidebarItems.map(s=>`<div class="sidebar-item ${adminTab===s.id?'active':''}" data-action="admin-tab" data-tab="${s.id}"><i class="fas ${s.icon}" style="width:18px;text-align:center"></i>${s.label}</div>`).join('')}
+</div>
+<div style="flex:1;padding:1.5rem 1.5rem;overflow-x:hidden">${content}</div>
+</div>`;
+}
+
+/* ===== FOOTER ===== */
+function renderFooter(){
+return`<footer style="border-top:1px solid var(--border);padding:2.5rem 1.25rem;margin-top:4rem">
+<div style="max-width:1200px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:2rem">
+<div>
+<div style="display:flex;align-items:center;gap:.5rem;margin-bottom:1rem">
+<div style="width:32px;height:32px;border-radius:6px;background:linear-gradient(135deg,#D4A017,#8B6914);display:flex;align-items:center;justify-content:center;font-weight:800;color:#000;font-family:'Space Grotesk';font-size:.85rem">C</div>
+<div><div class="logo-text" style="font-size:1rem;line-height:1.1">CUAN</div><div class="logo-sub">by baylos</div></div>
+</div>
+<p style="color:var(--muted);font-size:.85rem;line-height:1.6">Platform afiliasi terpercaya untuk mendapatkan penghasilan tambahan dari setiap penjualan yang Anda referensikan.</p>
+</div>
+<div><h4 style="font-family:'Space Grotesk';font-weight:600;font-size:.9rem;margin-bottom:1rem">Navigasi</h4><div style="display:flex;flex-direction:column;gap:.5rem"><a style="color:var(--muted);font-size:.85rem;cursor:pointer;transition:color .2s" data-action="nav-home" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--muted)'">Beranda</a><a style="color:var(--muted);font-size:.85rem;cursor:pointer;transition:color .2s" data-action="scroll-products" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--muted)'">Produk</a><a style="color:var(--muted);font-size:.85rem;cursor:pointer;transition:color .2s" data-action="scroll-how" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--muted)'">Cara Kerja</a></div></div>
+<div><h4 style="font-family:'Space Grotesk';font-weight:600;font-size:.9rem;margin-bottom:1rem">Akun</h4><div style="display:flex;flex-direction:column;gap:.5rem"><a style="color:var(--muted);font-size:.85rem;cursor:pointer;transition:color .2s" data-action="nav-login" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--muted)'">Masuk</a><a style="color:var(--muted);font-size:.85rem;cursor:pointer;transition:color .2s" data-action="nav-register" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--muted)'">Daftar</a></div></div>
+<div><h4 style="font-family:'Space Grotesk';font-weight:600;font-size:.9rem;margin-bottom:1rem">Kontak</h4><div style="display:flex;flex-direction:column;gap:.5rem;color:var(--muted);font-size:.85rem"><span><i class="fas fa-envelope mr-2" style="color:var(--accent)"></i>admin@cuan.id</span><span><i class="fas fa-map-marker-alt mr-2" style="color:var(--accent)"></i>Indonesia</span></div></div>
+</div>
+<div style="max-width:1200px;margin:2rem auto 0;padding-top:1.5rem;border-top:1px solid var(--border);text-align:center;color:var(--muted);font-size:.8rem">&copy; ${new Date().getFullYear()} CUAN by Baylos. Semua hak dilindungi.</div>
+</footer>`;
+}
+
+/* ===== MODAL: TAMBAH/EDIT PRODUK ===== */
+function showProductModal(product){
+const isEdit=!!product;
+const p=product||{name:'',price:'',image:'',desc:'',link:'',comm:10,cat:'Lainnya',active:true};
+showModal(`
+<h3 style="font-family:'Space Grotesk';font-weight:600;font-size:1.2rem;margin-bottom:1.5rem">${isEdit?'Edit':'Tambah'} Produk</h3>
+<form data-action="${isEdit?'admin-save-edit-product':'admin-save-new-product'}" ${isEdit?`data-id="${p.id}"`:''} style="display:flex;flex-direction:column;gap:1rem">
+<div><label style="font-size:.8rem;color:var(--muted);display:block;margin-bottom:.3rem">Nama Produk</label><input class="input-field" name="name" value="${esc(p.name)}" required></div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
+<div><label style="font-size:.8rem;color:var(--muted);display:block;margin-bottom:.3rem">Harga (Rp)</label><input type="number" class="input-field" name="price" value="${p.price}" min="0" required></div>
+<div><label style="font-size:.8rem;color:var(--muted);display:block;margin-bottom:.3rem">Komisi (%)</label><input type="number" class="input-field" name="comm" value="${p.comm}" min="0" max="100" required></div>
+</div>
+<div><label style="font-size:.8rem;color:var(--muted);display:block;margin-bottom:.3rem">URL Gambar</label><input class="input-field" name="image" value="${esc(p.image)}" placeholder="https://picsum.photos/seed/xxx/400/400" required></div>
+<div><label style="font-size:.8rem;color:var(--muted);display:block;margin-bottom:.3rem">Link Afiliasi</label><input class="input-field" name="link" value="${esc(p.link)}" placeholder="https://shopee.co.id/..." required></div>
+<div><label style="font-size:.8rem;color:var(--muted);display:block;margin-bottom:.3rem">Deskripsi</label><textarea class="input-field" name="desc" rows="3" required>${esc(p.desc)}</textarea></div>
+<div style="display:flex;align-items:center;gap:.75rem">
+<label style="font-size:.85rem;display:flex;align-items:center;gap:.5rem;cursor:pointer">
+<input type="checkbox" name="active" ${p.active?'checked':''} style="accent-color:var(--accent)"> Produk Aktif
+</label>
+</div>
+<div style="display:flex;gap:.75rem;justify-content:flex-end;margin-top:.5rem">
+<button type="button" data-action="close-modal" class="btn-outline">Batal</button>
+<button type="submit" class="btn-gold">${isEdit?'Simpan Perubahan':'Tambah Produk'}</button>
+</div>
+</form>`);
+}
+
+/* ===== MODAL: CATAT PENJUALAN MANUAL ===== */
+function showManualSaleModal(){
+const users=getDB(KEYS.users).filter(u=>u.role!=='admin');
+const products=getDB(KEYS.products).filter(p=>p.active);
+showModal(`
+<h3 style="font-family:'Space Grotesk';font-weight:600;font-size:1.2rem;margin-bottom:1.5rem">Catat Penjualan Manual</h3>
+<form data-action="admin-save-manual-sale" style="display:flex;flex-direction:column;gap:1rem">
+<div><label style="font-size:.8rem;color:var(--muted);display:block;margin-bottom:.3rem">Produk</label>
+<select name="productId" class="input-field" required><option value="">Pilih produk...</option>${products.map(p=>`<option value="${p.id}">${esc(p.name)} - ${formatRp(p.price)}</option>`).join('')}</select></div>
+<div><label style="font-size:.8rem;color:var(--muted);display:block;margin-bottom:.3rem">Afiliasi (User)</label>
+<select name="affUserId" class="input-field" required><option value="">Pilih user afiliasi...</option>${users.map(u=>`<option value="${u.id}">${esc(u.name)} (${u.code})</option>`).join('')}</select></div>
+<div style="display:flex;gap:.75rem;justify-content:flex-end;margin-top:.5rem">
+<button type="button" data-action="close-modal" class="btn-outline">Batal</button>
+<button type="submit" class="btn-gold">Simpen & Setujui</button>
+</div>
+</form>`);
+}
+
+/* ===== LOGIC: BELI PRODUK ===== */
+function handleBuy(productId){
+const products=getDB(KEYS.products);
+const product=products.find(p=>p.id===productId);
+if(!product)return;
+/* Jika ada referral code, catat sebagai penjualan pending */
+if(referralCode){
+const users=getDB(KEYS.users);
+const affUser=users.find(u=>u.code===referralCode&&u.role!=='admin');
+if(affUser){
+const sales=getDB(KEYS.sales);
+const commAmt=Math.round(product.price*product.comm/100);
+sales.push({id:'s-'+genId(),productId,affUserId:affUser.id,commAmt,status:'pending',date:new Date().toISOString()});
+setDB(KEYS.sales,sales);
+toast('Link afiliasi terdeteksi! Penjualan dicatat sebagai pending.','info');
+}
+}
+/* Buka link afiliasi */
+window.open(product.link,'_blank');
+}
+
+/* ===== EVENT DELEGATION ===== */
+document.getElementById('app').addEventListener('click',function(e){
+const t=e.target.closest('[data-action]');
+if(!t)return;
+const action=t.dataset.action;
+const id=t.dataset.id;
+const tab=t.dataset.tab;
+
+switch(action){
+case 'nav-home':nav('home');break;
+case 'nav-login':nav('login');break;
+case 'nav-register':nav('register');break;
+case 'nav-dashboard':nav('dashboard');break;
+case 'nav-admin':nav('admin');break;
+case 'nav-logout':doLogout();break;
+case 'toggle-mobile':mobileMenuOpen=!mobileMenuOpen;renderApp();break;
+case 'toggle-admin-sidebar':adminSidebarOpen=!adminSidebarOpen;renderApp();break;
+case 'scroll-products':if(currentView==='home'){document.getElementById('section-products')?.scrollIntoView({behavior:'smooth'})}else{nav('home');setTimeout(()=>document.getElementById('section-products')?.scrollIntoView({behavior:'smooth'}),100)}break;
+case 'scroll-how':if(currentView==='home'){document.getElementById('section-how')?.scrollIntoView({behavior:'smooth'})}else{nav('home');setTimeout(()=>document.getElementById('section-how')?.scrollIntoView({behavior:'smooth'}),100)}break;
+case 'user-tab':userTab=tab;renderApp();break;
+case 'admin-tab':adminTab=tab;adminSidebarOpen=false;renderApp();break;
+case 'buy-product':handleBuy(id);break;
+case 'copy-aff-link':{const inp=document.getElementById('aff-link-input');if(inp){navigator.clipboard.writeText(inp.value).then(()=>toast('Link afiliasi berhasil disalin!','success')).catch(()=>{inp.select();document.execCommand('copy');toast('Link afiliasi berhasil disalin!','success')})}break}
+case 'admin-add-product':showProductModal(null);break;
+case 'admin-edit-product':{const p=getDB(KEYS.products).find(x=>x.id===id);if(p)showProductModal(p);break}
+case 'admin-del-product':{
+const prods=getDB(KEYS.products).filter(x=>x.id!==id);setDB(KEYS.products,prods);toast('Produk berhasil dihapus','success');renderApp();break}
+case 'approve-sale':{const sales=getDB(KEYS.sales);const s=sales.find(x=>x.id===id);if(s){s.status='approved';setDB(KEYS.sales,sales);toast('Penjualan disetujui! Komisi dikreditkan.','success');renderApp()}break}
+case 'reject-sale':{const sales=getDB(KEYS.sales).filter(x=>x.id!==id);setDB(KEYS.sales,sales);toast('Penjualan ditolak.','error');renderApp();break}
+case 'admin-add-sale':showManualSaleModal();break;
+case 'close-modal':closeModal();break;
+}
+});
+
+/* FORM SUBMISSIONS */
+document.getElementById('app').addEventListener('submit',function(e){
+const form=e.target.closest('[data-action]');
+if(!form)return;
+e.preventDefault();
+const action=form.dataset.action;
+
+if(action==='submit-login'){
+const email=document.getElementById('login-email').value.trim();
+const pw=document.getElementById('login-pass').value;
+if(doLogin(email,pw)){if(currentUser.role==='admin')nav('admin');else nav('dashboard')}
+}
+else if(action==='submit-register'){
+const name=document.getElementById('reg-name').value.trim();
+const email=document.getElementById('reg-email').value.trim();
+const pw=document.getElementById('reg-pass').value;
+if(doRegister(name,email,pw))nav('dashboard');
+}
+else if(action==='admin-save-new-product'){
+const fd=new FormData(form);
+const products=getDB(KEYS.products);
+products.push({id:'p-'+genId(),name:fd.get('name'),price:Number(fd.get('price')),image:fd.get('image'),desc:fd.get('desc'),link:fd.get('link'),comm:Number(fd.get('comm')),cat:'Lainnya',active:!!fd.get('active')});
+setDB(KEYS.products,products);closeModal();toast('Produk berhasil ditambahkan!','success');renderApp();
+}
+else if(action==='admin-save-edit-product'){
+const fd=new FormData(form);const pid=form.dataset.id;
+const products=getDB(KEYS.products);const p=products.find(x=>x.id===pid);
+if(p){p.name=fd.get('name');p.price=Number(fd.get('price'));p.image=fd.get('image');p.desc=fd.get('desc');p.link=fd.get('link');p.comm=Number(fd.get('comm'));p.active=!!fd.get('active');setDB(KEYS.products,products);closeModal();toast('Produk berhasil diperbarui!','success');renderApp()}
+}
+else if(action==='admin-save-manual-sale'){
+const fd=new FormData(form);const pid=fd.get('productId');const uid=fd.get('affUserId');
+if(!pid||!uid){toast('Pilih produk dan user afiliasi','error');return}
+const products=getDB(KEYS.products);const product=products.find(x=>x.id===pid);
+if(!product){toast('Produk tidak ditemukan','error');return}
+const sales=getDB(KEYS.sales);
+const commAmt=Math.round(product.price*product.comm/100);
+sales.push({id:'s-'+genId(),productId:pid,affUserId:uid,commAmt,status:'approved',date:new Date().toISOString()});
+setDB(KEYS.sales,sales);closeModal();toast('Penjualan dicatat dan komisi dikreditkan!','success');renderApp();
+}
+});
+
+/* Klik overlay modal untuk tutup */
+document.getElementById('modal-container').addEventListener('click',function(e){
+if(e.target.classList.contains('modal-overlay'))closeModal();
+});
+
+/* ===== PARTIKEL EMAS ===== */
+function initParticles(){
+const canvas=document.getElementById('particles-canvas');
+const ctx=canvas.getContext('2d');
+let w,h;const particles=[];const COUNT=50;
+function resize(){w=canvas.width=window.innerWidth;h=canvas.height=window.innerHeight}
+resize();window.addEventListener('resize',resize);
+for(let i=0;i<COUNT;i++){particles.push({x:Math.random()*w,y:Math.random()*h,r:Math.random()*2+.5,dx:(Math.random()-.5)*.3,dy:(Math.random()-.5)*.3,o:Math.random()*.4+.1})}
+function draw(){
+ctx.clearRect(0,0,w,h);
+for(const p of particles){
+p.x+=p.dx;p.y+=p.dy;
+if(p.x<0)p.x=w;if(p.x>w)p.x=0;if(p.y<0)p.y=h;if(p.y>h)p.y=0;
+ctx.beginPath();ctx.arc(p.x,p.y,Math.max(.5,p.r),0,Math.PI*2);
+ctx.fillStyle=`rgba(212,160,23,${p.o})`;ctx.fill();
+}
+/* Garis koneksi */
+for(let i=0;i<particles.length;i++){for(let j=i+1;j<particles.length;j++){
+const dx=particles[i].x-particles[j].x;const dy=particles[i].y-particles[j].y;
+const dist=Math.sqrt(dx*dx+dy*dy);
+if(dist<150){ctx.beginPath();ctx.moveTo(particles[i].x,particles[i].y);ctx.lineTo(particles[j].x,particles[j].y);
+ctx.strokeStyle=`rgba(212,160,23,${.06*(1-dist/150)})`;ctx.stroke()}
+}}
+requestAnimationFrame(draw);
+}
+/* Respek prefers-reduced-motion */
+if(!window.matchMedia('(prefers-reduced-motion: reduce)').matches)draw();
+}
+
+/* ===== INISIALISASI ===== */
+function init(){
+initDB();
+/* Cek referral code dari URL */
+const params=new URLSearchParams(window.location.search);
+if(params.get('ref')){referralCode=params.get('ref').toUpperCase();sessionStorage.setItem('cuan_ref',referralCode)}
+else{referralCode=sessionStorage.getItem('cuan_ref')||null}
+/* Restore session */
+restoreSession();
+/* Redirect admin langsung ke admin panel */
+if(currentUser&&currentUser.role==='admin')currentView='admin';
+else if(currentUser)currentView='dashboard';
+/* Render */
+renderApp();
+initParticles();
+}
+init();
+</script>
+</body>
+</html>
